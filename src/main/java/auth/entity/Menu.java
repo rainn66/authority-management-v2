@@ -1,6 +1,5 @@
 package auth.entity;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -25,21 +24,19 @@ public class Menu extends CommonBase {
 
     @Id
     @GeneratedValue
-    @Column(name = "menu_idx")
     private Long menuIdx;
-    private Long parentMenuIdx;
+
     private Long menuOrder;
     private String menuNm;
     private String menuLink;
-    
-    private String menuAuthorityNm;
+    private String viewAuthority;
+    private String saveAuthority;
+    private String deleteAuthority;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_menu_idx")
+    @JoinColumn(name = "parentMenuIdx")
     private Menu parent;
 
-    //private Long parentMenuIdx;
     @OneToMany(mappedBy = "parent")
-    private List<Menu> menuList;
-
+    private List<Menu> childMenu;
 }

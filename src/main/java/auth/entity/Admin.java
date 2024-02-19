@@ -3,6 +3,7 @@ package auth.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -22,7 +23,7 @@ import java.time.LocalDateTime;
 public class Admin extends CommonBase {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long adminIdx;
 
     private String adminId;
@@ -33,5 +34,4 @@ public class Admin extends CommonBase {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "authority_idx")
     private Authority authority;
-
 }
