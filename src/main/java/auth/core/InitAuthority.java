@@ -27,10 +27,11 @@ public class InitAuthority {
         authorityRepository.save(일반관리자);
         authorityRepository.save(일반사용자);
 
+
+
         for (int i = 0; i < 5; i++) {
             Menu menu = Menu.builder().menuNm("최상위 메뉴 " + (i + 1))
                     .menuOrder(Long.parseLong(String.valueOf(i + 1)))
-                    .menuLink("/temp/" + (i + 1))
                     .viewAuthority("ALL")
                     .saveAuthority("ALL")
                     .deleteAuthority("ALL").build();
@@ -50,6 +51,16 @@ public class InitAuthority {
                 }
             }
         }
+
+        Menu menu = Menu.builder().menuNm("메뉴관리")
+                .menuOrder(6L)
+                .menuLink("/menu/menu_mng.html")
+                .viewAuthority("ALL")
+                .saveAuthority("ALL")
+                .deleteAuthority("ALL").build();
+
+        menuRepository.save(menu);
+
     }
 
 }
