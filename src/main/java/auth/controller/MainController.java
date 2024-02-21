@@ -25,5 +25,4 @@ public class MainController {
         model.addAttribute("sidebar", parentMenu);
         return "index";
     }
-
 }

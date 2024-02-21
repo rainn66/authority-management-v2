@@ -1,9 +1,10 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
+<th:block th:fragment="top_inc">
 <header id="header" class="header fixed-top d-flex align-items-center">
 
     <div class="d-flex align-items-center justify-content-between">
-        <a th:href="index.html" class="logo d-flex align-items-center">
+        <a th:href="@{/}" class="logo d-flex align-items-center">
             <img th:src="@{assets/img/logo.png}" alt="">
             <span class="d-none d-lg-block">NiceAdmin</span>
         </a>
@@ -227,4 +228,5 @@
     </nav><!-- End Icons Navigation -->
 
 </header><!-- End Header -->
+</th:block>
 </html>

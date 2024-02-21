@@ -54,7 +54,7 @@ public class InitAuthority {
 
         Menu menu = Menu.builder().menuNm("메뉴관리")
                 .menuOrder(6L)
-                .menuLink("/menu/menu_mng.html")
+                .menuLink("/menu/menuMng")
                 .viewAuthority("ALL")
                 .saveAuthority("ALL")
                 .deleteAuthority("ALL").build();

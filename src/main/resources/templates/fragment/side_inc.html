@@ -1,5 +1,6 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
+<th:block th:fragment="side_inc">
 <aside id="sidebar" class="sidebar">
 
     <ul class="sidebar-nav" id="sidebar-nav">
@@ -12,19 +13,32 @@
         </li><!-- End Dashboard Nav -->
 
         <li th:each="menu, menuStat : ${sidebar}" class="nav-item">
-            <a class="nav-link collapsed" th:attr="data-bs-target='#menuIdx' + ${menu.menuIdx}"
-               data-bs-toggle="collapse" th:href="${menu.menuLink}" href="#">
-                <i class="bi bi-menu-button-wide"></i><span th:text="${menu.menuNm}">null</span><i
-                    class="bi bi-chevron-down ms-auto"></i>
-            </a>
-            <ul th:id="'menuIdx' + ${menu.menuIdx}" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                <li th:each="child : ${menu.childMenu}">
-                    <a th:href="${child.menuLink}">
-                        <i class="bi bi-circle"></i><span th:text="${child.menuNm}"></span>
-                    </a>
-                </li>
-            </ul>
+            <div th:if="${#lists.size(menu.childMenu) > 0}" >
+                <a class="nav-link collapsed" th:attr="data-bs-target='#menuIdx' + ${menu.menuIdx}" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-menu-button-wide"></i>
+                    <span th:text="${menu.menuNm}">null</span>
+                    <i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul th:id="'menuIdx' + ${menu.menuIdx}" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    <li th:each="child : ${menu.childMenu}">
+                        <a th:onclick="|fnClickMenu('@{${child.menuLink}}')|" href="#">
+                            <i class="bi bi-circle"></i><span th:text="${child.menuNm}"></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div th:unless="${#lists.size(menu.childMenu) > 0}">
+                <a class="nav-link collapsed" th:attr="data-bs-target='#menuIdx' + ${menu.menuIdx}" th:onclick="|fnClickMenu('@{${menu.menuLink}}')|" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-menu-button-wide"></i>
+                    <span th:text="${menu.menuNm}">null</span>
+                </a>
+            </div>
         </li>
     </ul>
 </aside><!-- End Sidebar-->
+
+<script type="text/javascript" th:inline="javascript">
+
+</script>
+</th:block>
 </html>

@@ -1,38 +1,54 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <div th:replace="~{fragment/head_inc}"></div>
+    <th:block th:replace="~{fragment/head_inc :: head_inc}"/>
     <title>AUTHORITY</title>
 </head>
 
 <body>
 
+
 <!-- ======= Top ======= -->
-<div th:replace="~{fragment/top_inc}"></div>
+<th:block th:replace="~{fragment/top_inc :: top_inc}"/>
 <!-- ======= Top ======= -->
 
+
 <!-- ======= Side ======= -->
-<div th:replace="~{fragment/side_inc}"></div>
+<th:block th:replace="~{fragment/side_inc :: side_inc}"/>
 <!-- ======= Side ======= -->
 
+
+<!-- ======= Main ======= -->
 <main id="main" class="main">
     <div class="pagetitle">
-        <h1>Dashboard</h1>
+        <h1>Frequently Asked Questions</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                <li class="breadcrumb-item active">Dashboard</li>
+                <li class="breadcrumb-item">Pages</li>
+                <li class="breadcrumb-item active">Frequently Asked Questions</li>
             </ol>
         </nav>
     </div><!-- End Page Title -->
+    <section class="section">
+        <iframe src="" style="width: 100%;  border:0; min-height: 500px; height: calc(100vh - 50px);" id="main_contents" name="main_contents"></iframe>
+    </section>
+</main>
+<!-- ======= Main ======= -->
 
-    <selction></selction>
-
-</main><!-- End #main -->
 
 <!-- ======= Footer ======= -->
-<div th:replace="~{fragment/footer_inc}"></div>
+<th:block th:replace="~{fragment/footer_inc :: footer_inc}"/>
 <!-- ======= Footer ======= -->
+
+
+<script type="text/javascript" th:inline="javascript">
+    function fnClickMenu(url) {
+        console.log(url);
+        $('#main_contents').attr('src', url);
+    }
+</script>
+
 </body>
 </html>
