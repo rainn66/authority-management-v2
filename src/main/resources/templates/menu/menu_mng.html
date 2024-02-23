@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:replace="~{fragment/head_inc :: head_inc}"/>
@@ -6,105 +7,139 @@
 <body>
 <main id="main" class="main">
     <div class="pagetitle">
-        <h1>Frequently Asked Questions</h1>
+        <h1>메뉴관리</h1>
         <nav>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                <li class="breadcrumb-item">Pages</li>
-                <li class="breadcrumb-item active">Frequently Asked Questions</li>
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item">메뉴관리</li>
+                <!--<li class="breadcrumb-item active">Frequently Asked Questions</li>-->
             </ol>
         </nav>
     </div><!-- End Page Title -->
+
     <section class="section faq">
         <div class="row">
-            <div class="col-lg-6">
-
-
-
-
+            <div class="col-lg-4">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Laborum dolorem quam porro</h5>
-
+                        <h5 class="card-title">메뉴목록</h5>
                         <div class="accordion accordion-flush" id="faq-group-1">
-
-                            <div class="accordion-item">
+                            <div th:each="menu, menuStat : ${menus}" class="accordion-item">
                                 <h2 class="accordion-header">
-                                    <button class="accordion-button collapsed" data-bs-target="#faqsOne-1" type="button" data-bs-toggle="collapse">
-                                        Debitis adipisci eius?
+                                    <button class="accordion-button collapsed" th:attr="data-bs-target='#menuIdx' + ${menu.menuIdx}" type="button" data-bs-toggle="collapse">
+                                        <span th:text="${menu.menuNm}">null</span>
                                     </button>
                                 </h2>
-                                <div id="faqsOne-1" class="accordion-collapse collapse" data-bs-parent="#faq-group-1">
-                                    <div class="accordion-body">
-                                        Ut quasi odit odio totam accusamus vero eius. Nostrum asperiores voluptatem eos nulla ab dolores est asperiores iure. Quo est quis praesentium aut maiores. Corrupti sed aut expedita fugit vero dolorem. Nemo rerum sapiente. A quaerat dignissimos.
+                                <div th:if="${#lists.size(menu.childMenu) > 0}" th:id="'menuIdx' + ${menu.menuIdx}" class="accordion-collapse collapse" data-bs-parent="#faq-group-1">
+                                    <div th:each="child : ${menu.childMenu}" class="accordion-body">
+                                        <a th:onclick="|fnClickMenuDetail('@{${child.menuIdx}}')|" href="#">
+                                            <i class="bi bi-arrow-return-right" style="margin-left:30px;"></i><span th:text="${child.menuNm}"></span>
+                                        </a>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="accordion-item">
-                                <h2 class="accordion-header">
-                                    <button class="accordion-button collapsed" data-bs-target="#faqsOne-2" type="button" data-bs-toggle="collapse">
-                                        Omnis fugiat quis repellendus?
-                                    </button>
-                                </h2>
-                                <div id="faqsOne-2" class="accordion-collapse collapse" data-bs-parent="#faq-group-1">
+                                <div th:unless="${#lists.size(menu.childMenu) > 0}" th:id="'menuIdx' + ${menu.menuIdx}" class="accordion-collapse collapse" data-bs-parent="#faq-group-1">
                                     <div class="accordion-body">
-                                        In minus quia impedit est quas deserunt deserunt et. Nulla non quo dolores minima fugiat aut saepe aut inventore. Qui nesciunt odio officia beatae iusto sed voluptatem possimus quas. Officia vitae sit voluptatem nostrum a.
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="accordion-item">
-                                <h2 class="accordion-header">
-                                    <button class="accordion-button collapsed" data-bs-target="#faqsOne-3" type="button" data-bs-toggle="collapse">
-                                        Et occaecati praesentium aliquam modi incidunt?
-                                    </button>
-                                </h2>
-                                <div id="faqsOne-3" class="accordion-collapse collapse" data-bs-parent="#faq-group-1">
-                                    <div class="accordion-body">
-                                        Voluptates magni amet enim perspiciatis atque excepturi itaque est. Sit beatae animi incidunt eum repellat sequi ea saepe inventore. Id et vel et et. Nesciunt itaque corrupti quia ducimus. Consequatur maiores voluptatum fuga quod ut non fuga.
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="accordion-item">
-                                <h2 class="accordion-header">
-                                    <button class="accordion-button collapsed" data-bs-target="#faqsOne-4" type="button" data-bs-toggle="collapse">
-                                        Quo unde eaque vero dolor quis ipsam?
-                                    </button>
-                                </h2>
-                                <div id="faqsOne-4" class="accordion-collapse collapse" data-bs-parent="#faq-group-1">
-                                    <div class="accordion-body">
-                                        Numquam ut reiciendis aliquid. Quia veritatis quasi ipsam sed quo ut eligendi et non. Doloremque sed voluptatem at in voluptas aliquid dolorum.
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="accordion-item">
-                                <h2 class="accordion-header">
-                                    <button class="accordion-button collapsed" data-bs-target="#faqsOne-5" type="button" data-bs-toggle="collapse">
-                                        Natus sunt quo atque mollitia accusamus?
-                                    </button>
-                                </h2>
-                                <div id="faqsOne-5" class="accordion-collapse collapse" data-bs-parent="#faq-group-1">
-                                    <div class="accordion-body">
-                                        Aut necessitatibus maxime quis dolor et. Nihil laboriosam molestiae qui molestias placeat corrupti non quo accusamus. Nemo qui quis harum enim sed. Aliquam molestias pariatur delectus voluptas quidem qui rerum id quisquam. Perspiciatis voluptatem voluptatem eos. Vel aut minus labore at rerum eos.
+                                        <a th:onclick="|fnClickMenuDetail('@{${menu.menuIdx}}')|" href="#">
+                                            <i class="bi bi-arrow-return-right" style="margin-left:30px;"></i><span th:text="${menu.menuNm}"></span>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div><!-- End F.A.Q Group 1 -->
-
-
             </div>
+
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">메뉴상세</h5>
+                        <input type="hidden" id="menuIdx" name="menuIdx">
+                        <div class="row mb-3">
+                            <label for="menuNm" class="col-sm-4 col-form-label">메뉴명</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="menuNm" name="menuNm">
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label for="menuLink" class="col-sm-4 col-form-label">메뉴링크(Request URL)</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="menuLink" name="menuLink">
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label for="menuOrder" class="col-sm-4 col-form-label">메뉴순서</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="menuOrder" name="menuOrder" readonly>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label for="parentMenuNm" class="col-sm-4 col-form-label">상위메뉴</label>
+                            <div class="col-sm-8">
+                                <select class="form-select" aria-label="Default select example" id="parentMenuNm" name="parentMenuNm">
+                                    <option value="" selected>선택안함</option>
+                                    <option th:each="menu : ${menus}" th:value="${menu.menuIdx}" th:text="${menu.menuNm}">null</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label for="viewAuthority" class="col-sm-4 col-form-label">조회권한</label>
+                            <div class="col-sm-8">
+                                <select class="form-select" aria-label="Default select example" id="viewAuthority" name="viewAuthority">
+                                    <option value="" selected>선택</option>
+                                    <option th:each="authority : ${authorities}" th:value="${authority.authorityIdx}" th:text="${authority.authorityNm}">null</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label for="saveAuthority" class="col-sm-4 col-form-label">등록/수정/삭제 권한</label>
+                            <div class="col-sm-8">
+                                <select class="form-select" aria-label="Default select example" id="saveAuthority" name="saveAuthority">
+                                    <option value="" selected>선택</option>
+                                    <option th:each="authority : ${authorities}" th:value="${authority.authorityIdx}" th:text="${authority.authorityNm}">null</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label for="regDt" class="col-sm-4 col-form-label">등록일시</label>
+                            <div class="col-sm-8">
+                                <input type="date" class="form-control" id="regDt" name="regDt" readonly>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
         </div>
     </section>
 </main>
 <script type="text/javascript" th:inline="javascript">
-    function fnClickMenu(url) {
-        console.log(url);
-        $('#main_contents').attr('src', url);
+    function fnClickMenuDetail(menuIdx) {
+        console.log(menuIdx);
+        $.ajax({
+            url : '/menu/menuInfo',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                menuIdx: menuIdx
+            }),
+            success: function(rtn) {
+                $('#menuNm').val(rtn.menuInfo.menuNm);
+                $('#menuLink').val(rtn.menuInfo.menuLink);
+                $('#menuOrder').val(rtn.menuInfo.menuOrder);
+                $('#').val();
+                $('#').val();
+                $('#').val();
+                $('#regDt').val(rtn.menuInfo.regDt);
+            }
+        })
     }
 </script>
 </body>
