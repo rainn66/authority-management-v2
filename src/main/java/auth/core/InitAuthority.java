@@ -19,22 +19,23 @@ public class InitAuthority {
     @PostConstruct
     public void initAuthority() {
 
+        Authority 모든사용자 = Authority.builder().authorityNm("모든사용자").build();
         Authority 시스템관리자 = Authority.builder().authorityNm("시스템관리자").build();
         Authority 일반관리자 = Authority.builder().authorityNm("일반관리자").build();
         Authority 일반사용자 = Authority.builder().authorityNm("일반사용자").build();
 
+        authorityRepository.save(모든사용자);
         authorityRepository.save(시스템관리자);
         authorityRepository.save(일반관리자);
         authorityRepository.save(일반사용자);
 
-
-
         for (int i = 0; i < 5; i++) {
             Menu menu = Menu.builder().menuNm("최상위 메뉴 " + (i + 1))
                     .menuOrder(Long.parseLong(String.valueOf(i + 1)))
-                    .viewAuthority("ALL")
-                    .saveAuthority("ALL")
-                    .deleteAuthority("ALL").build();
+                    .viewAuthority(모든사용자)
+                    .saveAuthority(모든사용자)
+                    .menuLink("/temp/top/" + (i + 1))
+                    .build();
 
             menuRepository.save(menu);
 
@@ -44,9 +45,9 @@ public class InitAuthority {
                             .parent(menu)
                             .menuOrder(Long.parseLong(String.valueOf(j + 1)))
                             .menuLink("/temp/low/" + (j + 1))
-                            .viewAuthority("ALL")
-                            .saveAuthority("ALL")
-                            .deleteAuthority("ALL").build();
+                            .viewAuthority(모든사용자)
+                            .saveAuthority(모든사용자)
+                            .build();
                     menuRepository.save(lowMenu);
                 }
             }
@@ -55,9 +56,9 @@ public class InitAuthority {
         Menu menu = Menu.builder().menuNm("메뉴관리")
                 .menuOrder(6L)
                 .menuLink("/menu/menuMng")
-                .viewAuthority("ALL")
-                .saveAuthority("ALL")
-                .deleteAuthority("ALL").build();
+                .viewAuthority(모든사용자)
+                .saveAuthority(모든사용자)
+                .build();
 
         menuRepository.save(menu);
 

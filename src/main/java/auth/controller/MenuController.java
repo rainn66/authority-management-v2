@@ -44,8 +44,10 @@ public class MenuController {
     @PostMapping("/menuInfo")
     public Map<String, Object> menuInfo(@RequestBody Map<String, Object> param) {
         log.info("param : {}", param);
-        Map<String, Object> rtnMap = new HashMap<String, Object>();
+        Map<String, Object> rtnMap = new HashMap<>();
         Optional<Menu> menuInfo = menuRepository.findById(Long.parseLong(String.valueOf(param.get("menuIdx"))));
+
+        log.info("menuInfo {}", menuInfo);
 
         rtnMap.put("menuInfo", menuInfo);
 

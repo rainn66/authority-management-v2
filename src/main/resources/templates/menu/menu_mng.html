@@ -25,23 +25,27 @@
                         <h5 class="card-title">메뉴목록</h5>
                         <div class="accordion accordion-flush" id="faq-group-1">
                             <div th:each="menu, menuStat : ${menus}" class="accordion-item">
-                                <h2 class="accordion-header">
-                                    <button class="accordion-button collapsed" th:attr="data-bs-target='#menuIdx' + ${menu.menuIdx}" type="button" data-bs-toggle="collapse">
-                                        <span th:text="${menu.menuNm}">null</span>
-                                    </button>
-                                </h2>
-                                <div th:if="${#lists.size(menu.childMenu) > 0}" th:id="'menuIdx' + ${menu.menuIdx}" class="accordion-collapse collapse" data-bs-parent="#faq-group-1">
-                                    <div th:each="child : ${menu.childMenu}" class="accordion-body">
-                                        <a th:onclick="|fnClickMenuDetail('@{${child.menuIdx}}')|" href="#">
-                                            <i class="bi bi-arrow-return-right" style="margin-left:30px;"></i><span th:text="${child.menuNm}"></span>
-                                        </a>
+                                <div th:if="${#lists.size(menu.childMenu) > 0}">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" th:attr="data-bs-target='#menuIdx' + ${menu.menuIdx}" type="button" data-bs-toggle="collapse">
+                                            <span th:text="${menu.menuNm}">null</span>
+                                        </button>
+                                    </h2>
+                                    <div th:id="'menuIdx' + ${menu.menuIdx}" class="accordion-collapse collapse" data-bs-parent="#faq-group-1">
+                                        <div th:each="child : ${menu.childMenu}" class="accordion-body">
+                                            <a th:onclick="|fnClickMenuDetail('@{${child.menuIdx}}')|" href="#">
+                                                <i class="bi bi-arrow-return-right" style="margin-left:30px;"></i><span th:text="${child.menuNm}"></span>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
-                                <div th:unless="${#lists.size(menu.childMenu) > 0}" th:id="'menuIdx' + ${menu.menuIdx}" class="accordion-collapse collapse" data-bs-parent="#faq-group-1">
-                                    <div class="accordion-body">
-                                        <a th:onclick="|fnClickMenuDetail('@{${menu.menuIdx}}')|" href="#">
-                                            <i class="bi bi-arrow-return-right" style="margin-left:30px;"></i><span th:text="${menu.menuNm}"></span>
+                                <div th:unless="${#lists.size(menu.childMenu) > 0}">
+                                    <h2 class="accordion-header">
+                                        <a th:onclick="|fnClickMenuDetail('@{${menu.menuIdx}}')|" class="accordion-button collapsed" th:attr="data-bs-target='#menuIdx' + ${menu.menuIdx}" type="button" data-bs-toggle="collapse">
+                                            <span th:text="${menu.menuNm}">null</span>
                                         </a>
+                                    </h2>
+                                    <div th:id="'menuIdx' + ${menu.menuIdx}" class="accordion-collapse collapse" data-bs-parent="#faq-group-1">
                                     </div>
                                 </div>
                             </div>
@@ -109,7 +113,7 @@
                         <div class="row mb-3">
                             <label for="regDt" class="col-sm-4 col-form-label">등록일시</label>
                             <div class="col-sm-8">
-                                <input type="date" class="form-control" id="regDt" name="regDt" readonly>
+                                <input type="text" class="form-control" id="regDt" name="regDt" readonly>
                             </div>
                         </div>
 
@@ -131,12 +135,12 @@
                 menuIdx: menuIdx
             }),
             success: function(rtn) {
+                console.log(rtn.menuInfo);
                 $('#menuNm').val(rtn.menuInfo.menuNm);
                 $('#menuLink').val(rtn.menuInfo.menuLink);
                 $('#menuOrder').val(rtn.menuInfo.menuOrder);
-                $('#').val();
-                $('#').val();
-                $('#').val();
+                $('#viewAuthority').val(rtn.menuInfo.viewAuthority).prop("selected", true);
+                $('#saveAuthority').val(rtn.menuInfo.saveAuthority).prop("selected", true);
                 $('#regDt').val(rtn.menuInfo.regDt);
             }
         })
