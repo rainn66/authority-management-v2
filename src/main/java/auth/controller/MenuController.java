@@ -1,5 +1,6 @@
 package auth.controller;
 
+import auth.dto.MenuDTO;
 import auth.entity.Authority;
 import auth.entity.Menu;
 import auth.repository.AuthorityRepository;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Slf4j
 @Controller
@@ -45,11 +45,15 @@ public class MenuController {
     public Map<String, Object> menuInfo(@RequestBody Map<String, Object> param) {
         log.info("param : {}", param);
         Map<String, Object> rtnMap = new HashMap<>();
-        Optional<Menu> menuInfo = menuRepository.findById(Long.parseLong(String.valueOf(param.get("menuIdx"))));
+        Menu menuInfo = menuRepository.findById(Long.parseLong(String.valueOf(param.get("menuIdx")))).orElseThrow();
 
-        log.info("menuInfo {}", menuInfo);
+        MenuDTO menuDTO = new MenuDTO(menuInfo.getMenuIdx(), menuInfo.getMenuOrder(), menuInfo.getMenuNm(),
+                menuInfo.getMenuLink(), menuInfo.getViewAuthority(), menuInfo.getSaveAuthority()
+                , menuInfo.getParent(), menuInfo.getRegDt());
 
-        rtnMap.put("menuInfo", menuInfo);
+        log.info("menuDTO {}", menuDTO);
+
+        rtnMap.put("menuInfo", menuDTO);
 
         return rtnMap;
     }

@@ -1,6 +1,5 @@
 package auth.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -32,19 +31,12 @@ public class Menu extends CommonBase {
     private String menuNm;
     private String menuLink;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "view_authority")
-    @JsonIgnore
-    private Authority viewAuthority;
+    private Long viewAuthority;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "save_authority")
-    @JsonIgnore
-    private Authority saveAuthority;
+    private Long saveAuthority;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_menu_idx")
-    @JsonIgnore
     private Menu parent;
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
