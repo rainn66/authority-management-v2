@@ -55,7 +55,7 @@ public class InitAuthority {
 
         Menu menu = Menu.builder().menuNm("메뉴관리")
                 .menuOrder(6L)
-                .menuLink("/menu/menuMng")
+                .menuLink("/menu/getMenuList")
                 .viewAuthority(모든사용자.getAuthorityIdx())
                 .saveAuthority(모든사용자.getAuthorityIdx())
                 .build();

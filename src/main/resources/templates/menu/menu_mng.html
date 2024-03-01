@@ -6,15 +6,21 @@
 </head>
 <body>
 <main id="main" class="main">
-    <div class="pagetitle">
-        <h1>메뉴관리</h1>
-        <nav>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/">Home</a></li>
-                <li class="breadcrumb-item">메뉴관리</li>
-                <!--<li class="breadcrumb-item active">Frequently Asked Questions</li>-->
-            </ol>
-        </nav>
+    <div class="pagetitle" style="display:flex;justify-content: space-between">
+        <div>
+            <h1>메뉴관리</h1>
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item">메뉴관리</li>
+                    <!--<li class="breadcrumb-item active">Frequently Asked Questions</li>-->
+                </ol>
+            </nav>
+        </div>
+        <div style="text-align: right;">
+            <button type="button" class="btn btn-outline-primary" onclick="fnCreateMenu();">신규등록</button>
+            <button type="button" class="btn btn-outline-primary" onclick="fnSaveMenu();">저장</button>
+        </div>
     </div><!-- End Page Title -->
 
     <section class="section faq">
@@ -76,14 +82,14 @@
                         <div class="row mb-3">
                             <label for="menuOrder" class="col-sm-4 col-form-label">메뉴순서</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" id="menuOrder" name="menuOrder" readonly>
+                                <input type="text" class="form-control" id="menuOrder" name="menuOrder" placeholder="자동등록" readonly>
                             </div>
                         </div>
 
                         <div class="row mb-3">
-                            <label for="parentMenuNm" class="col-sm-4 col-form-label">상위메뉴</label>
+                            <label for="parentMenuIdx" class="col-sm-4 col-form-label">상위메뉴</label>
                             <div class="col-sm-8">
-                                <select class="form-select" aria-label="Default select example" id="parentMenuNm" name="parentMenuNm">
+                                <select class="form-select" aria-label="Default select example" id="parentMenuIdx" name="parentMenuIdx">
                                     <option value="" selected>선택안함</option>
                                     <option th:each="menu : ${menus}" th:value="${menu.menuIdx}" th:text="${menu.menuNm}">null</option>
                                 </select>
@@ -113,10 +119,9 @@
                         <div class="row mb-3">
                             <label for="regDt" class="col-sm-4 col-form-label">등록일시</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" id="regDt" name="regDt" readonly>
+                                <input type="text" class="form-control" id="regDt" name="regDt" placeholder="자동등록" readonly>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -124,26 +129,67 @@
         </div>
     </section>
 </main>
+
 <script type="text/javascript" th:inline="javascript">
     function fnClickMenuDetail(menuIdx) {
-        console.log(menuIdx);
         $.ajax({
-            url : '/menu/menuInfo',
+            url : '/menu/getMenuInfo',
             method: 'POST',
             contentType: 'application/json',
             data: JSON.stringify({
                 menuIdx: menuIdx
             }),
             success: function(rtn) {
-                console.log(rtn.menuInfo);
+                $('#menuIdx').val(rtn.menuInfo.menuIdx);
                 $('#menuNm').val(rtn.menuInfo.menuNm);
                 $('#menuLink').val(rtn.menuInfo.menuLink);
                 $('#menuOrder').val(rtn.menuInfo.menuOrder);
+                $('#parentMenuIdx').val(rtn.menuInfo.parentMenuIdx).prop("selected", true);
                 $('#viewAuthority').val(rtn.menuInfo.viewAuthority).prop("selected", true);
                 $('#saveAuthority').val(rtn.menuInfo.saveAuthority).prop("selected", true);
                 $('#regDt').val(rtn.menuInfo.regDt);
             }
         })
+    }
+
+    function fnCreateMenu() {
+        $('#menuIdx').val('');
+        $('#menuNm').val('');
+        $('#menuLink').val('');
+        $('#menuOrder').val('');
+        $('#parentMenuIdx').val('').prop("selected", true);
+        $('#viewAuthority').val('').prop("selected", true);
+        $('#saveAuthority').val('').prop("selected", true);
+        $('#regDt').val('');
+    }
+
+    function fnSaveMenu() {
+        if (confirm("저장하시겠습니까?")) {
+            let action = '';
+            const menuIdx = $('#menuIdx').val();
+            if (menuIdx === '' || menuIdx === undefined) {
+                action = '/menu/saveMenu';
+            } else {
+                action = '/menu/updateMenu';
+            }
+            $.ajax({
+                url : action,
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    menuIdx: menuIdx,
+                    menuNm: $('#menuNm').val(),
+                    menuLink: $('#menuLink').val(),
+                    parentMenuIdx: $('#parentMenuIdx').val(),
+                    viewAuthority: $('#viewAuthority').val(),
+                    saveAuthority: $('#saveAuthority').val()
+                }),
+                success: function(rtn) {
+                    alert(rtn.message);
+                    location.href = '/menu/getMenuList'
+                }
+            })
+        }
     }
 </script>
 </body>

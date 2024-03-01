@@ -8,4 +8,8 @@ import java.util.List;
 public interface MenuRepository extends JpaRepository<Menu, Long> {
 
     List<Menu> findByParentIsNull();
+
+    Long countByParentIsNull();
+
+    Long countByParentMenuIdx(Long menuIdx);
 }
