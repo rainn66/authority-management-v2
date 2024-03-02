@@ -65,6 +65,7 @@
                     <div class="card-body">
                         <h5 class="card-title">메뉴상세</h5>
                         <input type="hidden" id="menuIdx" name="menuIdx">
+                        <input type="hidden" id="beforeParentMenuIdx" name="beforeParentMenuIdx">
                         <div class="row mb-3">
                             <label for="menuNm" class="col-sm-4 col-form-label">메뉴명</label>
                             <div class="col-sm-8">
@@ -82,7 +83,7 @@
                         <div class="row mb-3">
                             <label for="menuOrder" class="col-sm-4 col-form-label">메뉴순서</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" id="menuOrder" name="menuOrder" placeholder="자동등록" readonly>
+                                <input type="text" class="form-control" id="menuOrder" name="menuOrder" placeholder="자동등록" disabled>
                             </div>
                         </div>
 
@@ -119,7 +120,7 @@
                         <div class="row mb-3">
                             <label for="regDt" class="col-sm-4 col-form-label">등록일시</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" id="regDt" name="regDt" placeholder="자동등록" readonly>
+                                <input type="text" class="form-control" id="regDt" name="regDt" placeholder="자동등록" disabled>
                             </div>
                         </div>
                     </div>
@@ -141,10 +142,15 @@
             }),
             success: function(rtn) {
                 $('#menuIdx').val(rtn.menuInfo.menuIdx);
+                $('#beforeParentMenuIdx').val(rtn.menuInfo.parentMenuIdx);
                 $('#menuNm').val(rtn.menuInfo.menuNm);
                 $('#menuLink').val(rtn.menuInfo.menuLink);
+                if (rtn.menuInfo.parentMenuIdx === null) {
+                    $('#parentMenuIdx').attr("disabled", true);
+                } else {
+                    $('#parentMenuIdx').attr("disabled", false).val(rtn.menuInfo.parentMenuIdx).prop("selected", true);
+                }
                 $('#menuOrder').val(rtn.menuInfo.menuOrder);
-                $('#parentMenuIdx').val(rtn.menuInfo.parentMenuIdx).prop("selected", true);
                 $('#viewAuthority').val(rtn.menuInfo.viewAuthority).prop("selected", true);
                 $('#saveAuthority').val(rtn.menuInfo.saveAuthority).prop("selected", true);
                 $('#regDt').val(rtn.menuInfo.regDt);
@@ -157,7 +163,7 @@
         $('#menuNm').val('');
         $('#menuLink').val('');
         $('#menuOrder').val('');
-        $('#parentMenuIdx').val('').prop("selected", true);
+        $('#parentMenuIdx').attr("disabled", false).val('').prop("selected", true);
         $('#viewAuthority').val('').prop("selected", true);
         $('#saveAuthority').val('').prop("selected", true);
         $('#regDt').val('');
@@ -166,10 +172,15 @@
     function fnSaveMenu() {
         if (confirm("저장하시겠습니까?")) {
             let action = '';
+            let parentChangeYn = 'N';
             const menuIdx = $('#menuIdx').val();
+
             if (menuIdx === '' || menuIdx === undefined) {
                 action = '/menu/saveMenu';
             } else {
+                if ($('#beforeParentMenuIdx').val() !== $('#parentMenuIdx').val()) {
+                    parentChangeYn = 'Y';
+                }
                 action = '/menu/updateMenu';
             }
             $.ajax({
@@ -180,6 +191,7 @@
                     menuIdx: menuIdx,
                     menuNm: $('#menuNm').val(),
                     menuLink: $('#menuLink').val(),
+                    parentChangeYn: parentChangeYn,
                     parentMenuIdx: $('#parentMenuIdx').val(),
                     viewAuthority: $('#viewAuthority').val(),
                     saveAuthority: $('#saveAuthority').val()

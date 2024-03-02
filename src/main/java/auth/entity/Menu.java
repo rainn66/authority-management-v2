@@ -1,6 +1,5 @@
 package auth.entity;
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -38,7 +37,6 @@ public class Menu extends CommonBase {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_menu_idx")
-    @Nullable
     private Menu parent;
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
