@@ -31,7 +31,7 @@ public class InitAuthority {
 
         for (int i = 0; i < 5; i++) {
             Menu menu = Menu.builder().menuNm("최상위 메뉴 " + (i + 1))
-                    .menuOrder(Long.parseLong(String.valueOf(i + 1)))
+                    .menuOrder(i+1)
                     .viewAuthority(모든사용자.getAuthorityIdx())
                     .saveAuthority(모든사용자.getAuthorityIdx())
                     .menuLink("/temp/top/" + (i + 1))
@@ -43,7 +43,7 @@ public class InitAuthority {
                 for (int j = 0; j < 3; j++) {
                     Menu lowMenu = Menu.builder().menuNm("하위 메뉴 " + (j + 1))
                             .parent(menu)
-                            .menuOrder(Long.parseLong(String.valueOf(j + 1)))
+                            .menuOrder(j+1)
                             .menuLink("/temp/low/" + (j + 1))
                             .viewAuthority(모든사용자.getAuthorityIdx())
                             .saveAuthority(모든사용자.getAuthorityIdx())
@@ -54,14 +54,20 @@ public class InitAuthority {
         }
 
         Menu menu = Menu.builder().menuNm("메뉴관리")
-                .menuOrder(6L)
+                .menuOrder(6)
                 .menuLink("/menu/getMenuList")
                 .viewAuthority(모든사용자.getAuthorityIdx())
                 .saveAuthority(모든사용자.getAuthorityIdx())
                 .build();
-
         menuRepository.save(menu);
 
+        Menu authorityMenu = Menu.builder().menuNm("권한관리")
+                .menuOrder(7)
+                .menuLink("/auth/getAuthList")
+                .viewAuthority(모든사용자.getAuthorityIdx())
+                .saveAuthority(모든사용자.getAuthorityIdx())
+                .build();
+        menuRepository.save(authorityMenu);
     }
 
 }

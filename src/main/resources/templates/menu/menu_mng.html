@@ -20,6 +20,7 @@
         <div style="text-align: right;">
             <button type="button" class="btn btn-outline-primary" onclick="fnCreateMenu();">신규등록</button>
             <button type="button" class="btn btn-outline-primary" onclick="fnSaveMenu();">저장</button>
+            <button type="button" class="btn btn-outline-secondary" onclick="fnDeleteMenu();">삭제</button>
         </div>
     </div><!-- End Page Title -->
 
@@ -65,7 +66,7 @@
                     <div class="card-body">
                         <h5 class="card-title">메뉴상세</h5>
                         <input type="hidden" id="menuIdx" name="menuIdx">
-                        <input type="hidden" id="beforeParentMenuIdx" name="beforeParentMenuIdx">
+                        <input type="hidden" id="bfParentMenuIdx" name="bfParentMenuIdx">
                         <div class="row mb-3">
                             <label for="menuNm" class="col-sm-4 col-form-label">메뉴명</label>
                             <div class="col-sm-8">
@@ -142,11 +143,11 @@
             }),
             success: function(rtn) {
                 $('#menuIdx').val(rtn.menuInfo.menuIdx);
-                $('#beforeParentMenuIdx').val(rtn.menuInfo.parentMenuIdx);
+                $('#bfParentMenuIdx').val(rtn.menuInfo.parentMenuIdx);
                 $('#menuNm').val(rtn.menuInfo.menuNm);
                 $('#menuLink').val(rtn.menuInfo.menuLink);
                 if (rtn.menuInfo.parentMenuIdx === null) {
-                    $('#parentMenuIdx').attr("disabled", true);
+                    $('#parentMenuIdx').attr("disabled", true).val('').prop("selected", true);
                 } else {
                     $('#parentMenuIdx').attr("disabled", false).val(rtn.menuInfo.parentMenuIdx).prop("selected", true);
                 }
@@ -163,6 +164,7 @@
         $('#menuNm').val('');
         $('#menuLink').val('');
         $('#menuOrder').val('');
+        $('#bfParentMenuIdx').val('');
         $('#parentMenuIdx').attr("disabled", false).val('').prop("selected", true);
         $('#viewAuthority').val('').prop("selected", true);
         $('#saveAuthority').val('').prop("selected", true);
@@ -178,9 +180,6 @@
             if (menuIdx === '' || menuIdx === undefined) {
                 action = '/menu/saveMenu';
             } else {
-                if ($('#beforeParentMenuIdx').val() !== $('#parentMenuIdx').val()) {
-                    parentChangeYn = 'Y';
-                }
                 action = '/menu/updateMenu';
             }
             $.ajax({
@@ -191,7 +190,7 @@
                     menuIdx: menuIdx,
                     menuNm: $('#menuNm').val(),
                     menuLink: $('#menuLink').val(),
-                    parentChangeYn: parentChangeYn,
+                    bfParentMenuIdx: $('#bfParentMenuIdx').val(),
                     parentMenuIdx: $('#parentMenuIdx').val(),
                     viewAuthority: $('#viewAuthority').val(),
                     saveAuthority: $('#saveAuthority').val()
@@ -203,6 +202,31 @@
             })
         }
     }
+
+    function fnDeleteMenu() {
+
+        if ($('#menuIdx').val() === null || $('#menuIdx').val() === '') {
+            alert('선택된 메뉴가 없습니다.');
+            return;
+        }
+
+        if (confirm('"' + $('#menuNm').val() + '" 메뉴를 삭제하시겠습니까?')) {
+            const menuIdx = $('#menuIdx').val();
+            $.ajax({
+                url: '/menu/deleteMenu',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    menuIdx: menuIdx
+                }),
+                success: function(rtn) {
+                    alert(rtn.message);
+                    location.href = '/menu/getMenuList'
+                }
+            })
+        }
+    }
+
 </script>
 </body>
 </html>

@@ -4,6 +4,7 @@ import auth.dto.MenuDTO;
 import auth.entity.Menu;
 import auth.repository.MenuRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +20,7 @@ public class MenuService {
     private final MenuRepository menuRepository;
 
     public List<MenuDTO> getMenuList() {
-        return menuRepository.findByParentIsNull().stream()
+        return menuRepository.findByParentIsNull(Sort.by(Sort.Direction.ASC, "menuOrder")).stream()
                 .map(MenuDTO::new).collect(Collectors.toList());
     }
 
@@ -40,7 +41,7 @@ public class MenuService {
     public void saveMenu(MenuDTO menuDTO) {
 
         Menu parent;
-        Long count;
+        int count;
         if (menuDTO.getParentMenuIdx() == null) {
             parent = null;
             count = menuRepository.countByParentIsNull();
@@ -68,10 +69,10 @@ public class MenuService {
         Optional<Menu> findMenu = menuRepository.findById(menuDTO.getMenuIdx());
 
         findMenu.ifPresent(menu -> {
-            //상위 메뉴가 이전과 달라졌을 경우
-            if ("Y".equals(menuDTO.getParentChangeYn())) {
+            //상위 메뉴가 이전과 달라졌을 경우(최상위 메뉴는 타 메뉴의 하위로 이동 불가능)
+            if (!menuDTO.getBfParentMenuIdx().equals(menuDTO.getParentMenuIdx())) {
                 Menu parent;
-                Long count;
+                int count;
                 if (menuDTO.getParentMenuIdx() == null) {
                     parent = null;
                     count = menuRepository.countByParentIsNull();
@@ -85,6 +86,13 @@ public class MenuService {
                         menuDTO.getViewAuthority(),
                         menuDTO.getSaveAuthority(),
                         parent);
+
+                List<Menu> bfMenuList = menuRepository.findByParentMenuIdx(menuDTO.getBfParentMenuIdx());
+                int orderVal = 1;
+                for (Menu m:bfMenuList) {
+                    m.updateOrder(orderVal);
+                    orderVal++;
+                }
             } else {
                 menu.update(menuDTO.getMenuNm(),
                         menuDTO.getMenuLink(),
@@ -92,6 +100,11 @@ public class MenuService {
                         menuDTO.getSaveAuthority());
             }
         });
+    }
+
+    @Transactional
+    public void deleteMenu(Long menuIdx) {
+        menuRepository.deleteById(menuIdx);
     }
 
 }

@@ -1,15 +1,18 @@
 package auth.repository;
 
 import auth.entity.Menu;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
 public interface MenuRepository extends JpaRepository<Menu, Long> {
 
-    List<Menu> findByParentIsNull();
+    List<Menu> findByParentIsNull(Sort menuOrder);
 
-    Long countByParentIsNull();
+    List<Menu> findByParentMenuIdx(Long parentMenuIdx);
 
-    Long countByParentMenuIdx(Long menuIdx);
+    int countByParentIsNull();
+
+    int countByParentMenuIdx(Long menuIdx);
 }

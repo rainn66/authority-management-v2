@@ -40,7 +40,6 @@ public class MenuController {
     @ResponseBody
     @PostMapping("/getMenuInfo")
     public Map<String, Object> getMenuInfo(@RequestBody Map<String, Object> param) {
-        log.info("param : {}", param);
         Map<String, Object> rtnMap = new HashMap<>();
         rtnMap.put("menuInfo", menuService.getMenuInfo(Long.parseLong(String.valueOf(param.get("menuIdx")))));
         return rtnMap;
@@ -75,6 +74,15 @@ public class MenuController {
         menuService.updateMenu(menuDTO);
 
         rtnMap.put("message", "저장되었습니다.");
+        return rtnMap;
+    }
+
+    @ResponseBody
+    @PostMapping("/deleteMenu")
+    public Map<String, Object> deleteMenu(@RequestBody Map<String, Object> param) {
+        Map<String, Object> rtnMap = new HashMap<>();
+        menuService.deleteMenu(Long.parseLong(String.valueOf(param.get("menuIdx"))));
+        rtnMap.put("message", "삭제되었습니다.");
         return rtnMap;
     }
 

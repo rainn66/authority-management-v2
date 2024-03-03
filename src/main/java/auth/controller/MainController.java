@@ -1,7 +1,7 @@
 package auth.controller;
 
-import auth.entity.Menu;
-import auth.repository.MenuRepository;
+import auth.dto.MenuDTO;
+import auth.service.MenuService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -20,12 +20,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MainController {
 
-    private final MenuRepository menuRepository;
+    private final MenuService menuService;
 
     @GetMapping("/")
     public String home(Model model) {
 
-        List<Menu> parentMenu = menuRepository.findByParentIsNull();
+        List<MenuDTO> parentMenu = menuService.getMenuList();
 
         model.addAttribute("sidebar", parentMenu);
         return "index";

@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class MenuDTO {
     private Long menuIdx;
-    private Long menuOrder;
+    private int menuOrder;
 
     @NotNull
     private String menuNm;
@@ -32,8 +32,8 @@ public class MenuDTO {
     @NotNull
     private Long saveAuthority;
 
-    //상위 메뉴 변경 구분값
-    private String parentChangeYn;
+    //변경 전 상위메뉴
+    private Long bfParentMenuIdx;
 
     private Long parentMenuIdx;
 
