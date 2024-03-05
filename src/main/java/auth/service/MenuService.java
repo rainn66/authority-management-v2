@@ -107,4 +107,15 @@ public class MenuService {
         menuRepository.deleteById(menuIdx);
     }
 
+    @Transactional
+    public void updateOrder(Long[] menuIdxList) {
+        int orderVal = 1;
+        for (Long menuIdx : menuIdxList) {
+            Menu menu = menuRepository.findById(menuIdx).orElseThrow();
+            menu.updateOrder(orderVal);
+            orderVal++;
+        }
+    }
+
+
 }

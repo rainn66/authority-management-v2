@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -32,6 +34,11 @@ public class MenuController {
 
     @GetMapping("/getMenuList")
     public String getMenuList(Model model) {
+
+        List<MenuDTO> menuList = menuService.getMenuList();
+        for (MenuDTO menu : menuList) {
+            log.info("menu.getRegDt() {}", menu.getRegDt());
+        }
         model.addAttribute("menus", menuService.getMenuList());
         model.addAttribute("authorities", authorityService.getAuthorityList());
         return "menu/menu_mng";
@@ -83,6 +90,14 @@ public class MenuController {
         Map<String, Object> rtnMap = new HashMap<>();
         menuService.deleteMenu(Long.parseLong(String.valueOf(param.get("menuIdx"))));
         rtnMap.put("message", "삭제되었습니다.");
+        return rtnMap;
+    }
+
+    @ResponseBody
+    @PostMapping("/setMenuOrder")
+    public Map<String, Object> setMenuOrder(@RequestParam(name = "menuIdxOrder[]") Long[] menuIdxList) {
+        Map<String, Object> rtnMap = new HashMap<>();
+        menuService.updateOrder(menuIdxList);
         return rtnMap;
     }
 

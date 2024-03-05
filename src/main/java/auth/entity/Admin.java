@@ -26,8 +26,8 @@ public class Admin extends CommonBase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long adminIdx;
 
-    private String adminId;
-    private String adminNm;
+    private String userId;
+    private String userNm;
     private String password;
     private LocalDateTime lastLoginDt;
 

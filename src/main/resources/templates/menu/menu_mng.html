@@ -29,24 +29,25 @@
             <div class="col-lg-4">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">메뉴목록</h5>
-                        <div class="accordion accordion-flush" id="faq-group-1">
-                            <div th:each="menu, menuStat : ${menus}" class="accordion-item">
-                                <div th:if="${#lists.size(menu.childMenu) > 0}">
+                        <h5 class="card-title">메뉴목록 <span>(드래그 앤 드롭으로 메뉴 순서변경 가능)</span></h5>
+                        <ul class="accordion accordion-flush" id="faq-group-1">
+                            <li th:each="menu, menuStat : ${menus}" class="accordion-item" th:id="'menuIdxOrder_'+${menu.menuIdx}">
+                                <div th:if="${#lists.size(menu.childMenu) > 0}" th:attr="data-order=${menu.menuOrder}">
                                     <h2 class="accordion-header">
-                                        <button class="accordion-button collapsed" th:attr="data-bs-target='#menuIdx' + ${menu.menuIdx}" type="button" data-bs-toggle="collapse">
+                                        <button class="accordion-button collapsed" th:onclick="|fnClickMenuDetail('@{${menu.menuIdx}}')|" th:attr="data-bs-target='#menuIdx' + ${menu.menuIdx}" type="button" data-bs-toggle="collapse">
                                             <span th:text="${menu.menuNm}">null</span>
                                         </button>
                                     </h2>
-                                    <div th:id="'menuIdx' + ${menu.menuIdx}" class="accordion-collapse collapse" data-bs-parent="#faq-group-1">
-                                        <div th:each="child : ${menu.childMenu}" class="accordion-body">
+                                    <ul th:id="'menuIdx' + ${menu.menuIdx}" class="accordion-collapse collapse" data-bs-parent="#faq-group-1">
+                                        <li th:each="child : ${menu.childMenu}" class="accordion-body" th:id="'menuIdxOrder_'+${child.menuIdx}">
                                             <a th:onclick="|fnClickMenuDetail('@{${child.menuIdx}}')|" href="#">
-                                                <i class="bi bi-arrow-return-right" style="margin-left:30px;"></i><span th:text="${child.menuNm}"></span>
+                                                <!--<i class="bi bi-arrow-return-right" style="margin-left:30px;"></i>-->
+                                                <span th:text="${child.menuNm}">null</span>
                                             </a>
-                                        </div>
-                                    </div>
+                                        </li>
+                                    </ul>
                                 </div>
-                                <div th:unless="${#lists.size(menu.childMenu) > 0}">
+                                <div th:unless="${#lists.size(menu.childMenu) > 0}" th:attr="data-order=${menu.menuOrder}">
                                     <h2 class="accordion-header">
                                         <a th:onclick="|fnClickMenuDetail('@{${menu.menuIdx}}')|" class="accordion-button collapsed" th:attr="data-bs-target='#menuIdx' + ${menu.menuIdx}" type="button" data-bs-toggle="collapse">
                                             <span th:text="${menu.menuNm}">null</span>
@@ -55,8 +56,8 @@
                                     <div th:id="'menuIdx' + ${menu.menuIdx}" class="accordion-collapse collapse" data-bs-parent="#faq-group-1">
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+                            </li>
+                        </ul>
                     </div>
                 </div><!-- End F.A.Q Group 1 -->
             </div>
@@ -133,6 +134,33 @@
 </main>
 
 <script type="text/javascript" th:inline="javascript">
+
+    $(function() {
+        $('.accordion').sortable({
+            update: function() {
+                fnSetMenuOrder(this);
+            }
+        });
+        $('.accordion-collapse').sortable({
+            update: function() {
+                fnSetMenuOrder(this);
+            }
+        });
+    });
+
+    function fnSetMenuOrder(obj) {
+        let ids = $(obj).sortable('serialize');
+        console.log(ids);
+        $.ajax({
+            url: '/menu/setMenuOrder',
+            method: 'POST',
+            data: ids,
+            success: function(rtn) {
+                console.log(rtn);
+            }
+        });
+    }
+
     function fnClickMenuDetail(menuIdx) {
         $.ajax({
             url : '/menu/getMenuInfo',
@@ -156,7 +184,7 @@
                 $('#saveAuthority').val(rtn.menuInfo.saveAuthority).prop("selected", true);
                 $('#regDt').val(rtn.menuInfo.regDt);
             }
-        })
+        });
     }
 
     function fnCreateMenu() {
@@ -174,7 +202,6 @@
     function fnSaveMenu() {
         if (confirm("저장하시겠습니까?")) {
             let action = '';
-            let parentChangeYn = 'N';
             const menuIdx = $('#menuIdx').val();
 
             if (menuIdx === '' || menuIdx === undefined) {

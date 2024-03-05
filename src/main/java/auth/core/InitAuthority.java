@@ -1,12 +1,16 @@
 package auth.core;
 
+import auth.entity.Admin;
 import auth.entity.Authority;
 import auth.entity.Menu;
+import auth.repository.AdminRepository;
 import auth.repository.AuthorityRepository;
 import auth.repository.MenuRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
 
 @Component
 @RequiredArgsConstructor
@@ -15,6 +19,8 @@ public class InitAuthority {
     private final AuthorityRepository authorityRepository;
 
     private final MenuRepository menuRepository;
+
+    private final AdminRepository adminRepository;
 
     @PostConstruct
     public void initAuthority() {
@@ -68,6 +74,13 @@ public class InitAuthority {
                 .saveAuthority(모든사용자.getAuthorityIdx())
                 .build();
         menuRepository.save(authorityMenu);
+
+        Admin admin = Admin.builder().userId("admin")
+                .userNm("최고관리자")
+                .password("admin")
+                .lastLoginDt(LocalDateTime.now())
+                .authority(시스템관리자).build();
+        adminRepository.save(admin);
     }
 
 }
