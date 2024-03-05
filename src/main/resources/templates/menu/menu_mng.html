@@ -29,7 +29,7 @@
             <div class="col-lg-4">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">메뉴목록 <span>(드래그 앤 드롭으로 메뉴 순서변경 가능)</span></h5>
+                        <h5 class="card-title">메뉴목록 <span>(드래그 앤 드롭으로 메뉴 순서변경 가능, 좌측 메뉴는 새로고침 후 적용됩니다.)</span></h5>
                         <ul class="accordion accordion-flush" id="faq-group-1">
                             <li th:each="menu, menuStat : ${menus}" class="accordion-item" th:id="'menuIdxOrder_'+${menu.menuIdx}">
                                 <div th:if="${#lists.size(menu.childMenu) > 0}" th:attr="data-order=${menu.menuOrder}">

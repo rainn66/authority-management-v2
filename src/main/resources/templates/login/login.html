@@ -29,7 +29,7 @@
 
                                 <div class="pt-4 pb-2">
                                     <h5 class="card-title text-center pb-0 fs-4">Login to Your Account</h5>
-                                    <p class="text-center small">Enter your userid & password to login</p>
+                                    <p class="text-center small">Enter your id & password to login</p>
                                 </div>
 
                                 <form class="row g-3 needs-validation" name="loginForm" id="loginForm" th:action="@{/login}" novalidate method="POST">
@@ -37,7 +37,6 @@
                                     <div class="col-12">
                                         <label for="userId" class="form-label">ID</label>
                                         <div class="input-group has-validation">
-                                            <span class="input-group-text" id="inputGroupPrepend">@</span>
                                             <input type="text" name="userId" class="form-control" id="userId" required>
                                             <div class="invalid-feedback">Please enter your userid.</div>
                                         </div>
@@ -86,9 +85,7 @@
 <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
 <script type="text/javascript" th:inline="javascript">
-    function fnLogin() {
-        $('#loginForm').submit();
-    }
+
 </script>
 
 </body>

@@ -10,8 +10,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Slf4j
 @Controller
@@ -20,8 +22,14 @@ public class LoginController {
 
     private final LoginService loginService;
 
+    @GetMapping("/login")
+    public String login() {
+        return "login/login";
+    }
+
     @PostMapping("/login")
     public String login(@ModelAttribute @Valid LoginDTO form,
+                        @RequestParam(defaultValue = "/") String redirectURL,
                         HttpServletRequest request,
                         BindingResult bindingResult) throws Exception {
         if (bindingResult.hasErrors()) {
@@ -38,7 +46,7 @@ public class LoginController {
         HttpSession session = request.getSession();
         session.setAttribute("loginAdmin", adminDTO);
 
-        return "redirect:/";
+        return "redirect:" + redirectURL;
     }
 
     @PostMapping("/logout")
