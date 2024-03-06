@@ -34,4 +34,14 @@ public class Admin extends CommonBase {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "authority_idx")
     private Authority authority;
+
+    public void update(String userNm, Authority authority) {
+        this.userNm = userNm;
+        this.authority = authority;
+    }
+
+    public void update(LocalDateTime lastLoginDt) {
+        this.lastLoginDt = lastLoginDt;
+    }
+
 }

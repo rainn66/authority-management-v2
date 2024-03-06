@@ -17,33 +17,34 @@
             </nav>
         </div>
         <div style="text-align: right;">
-            <button type="button" class="btn btn-outline-primary" onclick="fnCreateAuthority();">신규등록</button>
-            <button type="button" class="btn btn-outline-primary" onclick="fnSaveAuthority();">저장</button>
-            <button type="button" class="btn btn-outline-secondary" onclick="fnDeleteAuthority();">삭제</button>
+            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#regAdminForm" onclick="fnCreateAdmin();">신규등록</button>
+            <button type="button" class="btn btn-outline-primary" onclick="fnUpdateAdmin();">저장</button>
+            <button type="button" class="btn btn-outline-secondary" onclick="fnDeleteAdmin();">삭제</button>
         </div>
     </div><!-- End Page Title -->
 
     <section class="section">
         <div class="row">
-            <div class="col-lg-4">
+            <div class="col-lg-6">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">권한목록</h5>
+                        <h5 class="card-title">관리자목록</h5>
                         <table class="table table-hover">
                             <thead>
                                 <tr>
                                     <th style="text-align:center;">No</th>
-                                    <th style="text-align:center;">권한명</th>
-                                    <th style="text-align:center;">등록자</th>
-                                    <th style="text-align:center;">등록일시</th>
+                                    <th style="text-align:center;">ID</th>
+                                    <th style="text-align:center;">관리자명</th>
+                                    <th style="text-align:center;">권한</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr th:each="authority, authStat : ${authorities}" th:onclick="|fnClickAuthorityDetail('@{${authority.authorityIdx}}')|">
-                                    <td style="text-align:center;" th:text="${authStat.count}">-</td>
-                                    <td style="text-align:center;" th:text="${authority.authorityNm}">-</td>
-                                    <td style="text-align:center;" th:text="${authority.regUserId}">-</td>
-                                    <td style="text-align:center;" th:text="${#temporals.format(authority.regDt, 'yyyy-MM-dd HH:mm:ss')}">-</td>
+                                <tr th:each="admin, stat : ${adminList}" th:onclick="|fnClickAdminDetail('@{${admin.adminIdx}}')|">
+                                    <td style="text-align:center;" th:text="${stat.count}">-</td>
+                                    <td style="text-align:center;" th:text="${admin.userId}">-</td>
+                                    <td style="text-align:center;" th:text="${admin.userNm}">-</td>
+                                    <td style="text-align:center;" th:text="${admin.authorityNm}">-</td>
+                                    <!--<td style="text-align:center;" th:text="${#temporals.format(admin.lastLoginDt, 'yyyy-MM-dd HH:mm:ss')}">-</td>-->
                                 </tr>
                             </tbody>
                         </table>
@@ -52,15 +53,39 @@
             </div>
 
 
-            <div class="col-lg-8">
+            <div class="col-lg-6">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">권한상세</h5>
-                        <input type="hidden" id="authorityIdx" name="authorityIdx">
+                        <h5 class="card-title">관리자상세</h5>
+                        <input type="hidden" id="adminIdx" name="adminIdx">
                         <div class="row mb-3">
-                            <label for="authorityNm" class="col-sm-4 col-form-label">권한명</label>
+                            <label for="userId" class="col-sm-4 col-form-label">ID</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" id="authorityNm" name="authorityNm">
+                                <input type="text" class="form-control" id="userId" name="userId" disabled>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label for="userNm" class="col-sm-4 col-form-label">관리자명</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="userNm" name="userNm">
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label for="lastLoginDt" class="col-sm-4 col-form-label">최근접속일시</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="lastLoginDt" name="lastLoginDt" placeholder="자동등록" disabled>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label for="authorityIdx" class="col-sm-4 col-form-label">권한</label>
+                            <div class="col-sm-8">
+                                <select class="form-select" aria-label="Default select example" id="authorityIdx" name="authorityIdx">
+                                    <option value="" selected>선택</option>
+                                    <option th:each="authority : ${authorities}" th:value="${authority.authorityIdx}" th:text="${authority.authorityNm}">null</option>
+                                </select>
                             </div>
                         </div>
 
@@ -70,56 +95,147 @@
                                 <input type="text" class="form-control" id="regUserId" name="regUserId" placeholder="자동등록" disabled>
                             </div>
                         </div>
-
-                        <div class="row mb-3">
-                            <label for="regDt" class="col-sm-4 col-form-label">등록일시</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" id="regDt" name="regDt" placeholder="자동등록" disabled>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
-
 
         </div>
     </section>
 </main>
 
+
+<div class="modal fade" id="regAdminForm" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">관리자 신규등록</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-1">
+                    <label for="newUserId" class="col-sm-4 col-form-label">ID</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="newUserId" name="newUserId" disabled>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-1">
+                    <label for="newUserNm" class="col-sm-4 col-form-label">관리자명</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="newUserNm" name="newUserNm" disabled>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-1">
+                    <label for="password" class="col-sm-4 col-form-label">PASSWORD</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="password" name="password" disabled>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-1">
+                    <label for="passwordChk" class="col-sm-4 col-form-label">PASSWORD CHECK</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="passwordChk" name="passwordChk" disabled>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-1">
+                    <label for="newAuthorityIdx" class="col-sm-4 col-form-label">권한</label>
+                    <div class="col-sm-8">
+                        <select class="form-select" aria-label="Default select example" id="newAuthorityIdx" name="newAuthorityIdx">
+                            <option value="" selected>선택</option>
+                            <option th:each="authority : ${authorities}" th:value="${authority.authorityIdx}" th:text="${authority.authorityNm}">null</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div><!-- End Vertically centered Modal-->
+
 <script type="text/javascript" th:inline="javascript">
 
-    function fnClickAuthorityDetail(authorityIdx) {
+    function fnClickAdminDetail(adminIdx) {
         $.ajax({
-            url : '/auth/getAuthInfo',
+            url : '/authority/getAdminInfo',
             method: 'POST',
             contentType: 'application/json',
             data: JSON.stringify({
-                authorityIdx: authorityIdx
+                adminIdx: adminIdx
             }),
             success: function(rtn) {
-                $('#authorityIdx').val(rtn.authorityInfo.authorityIdx);
-                $('#authorityNm').val(rtn.authorityInfo.authorityNm);
-                $('#regUserId').val(rtn.authorityInfo.regUserId);
-                $('#regDt').val(rtn.authorityInfo.regDt);
+                $('#adminIdx').val(rtn.adminInfo.adminIdx);
+                $('#userId').val(rtn.adminInfo.userId);
+                $('#userNm').val(rtn.adminInfo.userNm);
+                $('#lastLoginDt').val(rtn.adminInfo.lastLoginDt);
+                $('#authorityIdx').val(rtn.adminInfo.authorityIdx).prop("selected", true);
+                $('#regUserId').val(rtn.adminInfo.regUserId);
             }
         });
     }
 
-    function fnCreateAuthority() {
-        $('#authorityIdx').val('');
-        $('#authorityNm').val('');
-        $('#regUserId').val('');
+    function fnCreateAdmin() {
+        $('#adminIdx').val('');
+        $('#userId').val('');
+        $('#userNm').val('');
+        $('#lastLoginDt').val('');
+        $('#authorityIdx').val('').prop("selected", true);
         $('#regDt').val('');
     }
 
-    function fnSaveAuthority() {
-        if (confirm('저장하시겠습니까?')) {
+    function fnUpdateAdmin() {
+        const adminIdx = $('#adminIdx').val()
+        if (adminIdx === '' || adminIdx === undefined) {
+            alert('선택된 항목이 없습니다.');
+        }
 
+        if (confirm('저장하시겠습니까?')) {
+            $.ajax({
+                url : '/authority/updateAdmin',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    adminIdx: adminIdx,
+                    userNm: $('#userNm').val(),
+                    authorityIdx: $('#authorityIdx').val()
+                }),
+                success: function(rtn) {
+                    alert(rtn.message);
+                    location.href = '/authority/getAdminList'
+                }
+            });
         }
     }
 
-    function fnDeleteAuthority() {
+    function fnDeleteAdmin() {
+        const adminIdx = $('#adminIdx').val()
+        if (adminIdx === '' || adminIdx === undefined) {
+            alert('선택된 항목이 없습니다.');
+        }
 
+        if (confirm('삭제하시겠습니까?')) {
+            $.ajax({
+                url : '/authority/deleteAdmin',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    adminIdx: adminIdx,
+                }),
+                success: function(rtn) {
+                    alert(rtn.message);
+                    location.href = '/authority/getAdminList'
+                }
+            });
+        }
     }
 
 </script>

@@ -29,9 +29,10 @@ public class LoginController {
 
     @PostMapping("/login")
     public String login(@ModelAttribute @Valid LoginDTO form,
+                        BindingResult bindingResult,
                         @RequestParam(defaultValue = "/") String redirectURL,
-                        HttpServletRequest request,
-                        BindingResult bindingResult) throws Exception {
+                        HttpServletRequest request
+                        ) throws Exception {
         if (bindingResult.hasErrors()) {
             return "login/login";
         }

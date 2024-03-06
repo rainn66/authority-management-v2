@@ -10,15 +10,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -35,10 +29,6 @@ public class MenuController {
     @GetMapping("/getMenuList")
     public String getMenuList(Model model) {
 
-        List<MenuDTO> menuList = menuService.getMenuList();
-        for (MenuDTO menu : menuList) {
-            log.info("menu.getRegDt() {}", menu.getRegDt());
-        }
         model.addAttribute("menus", menuService.getMenuList());
         model.addAttribute("authorities", authorityService.getAuthorityList());
         return "menu/menu_mng";

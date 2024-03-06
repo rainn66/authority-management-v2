@@ -69,7 +69,7 @@ public class InitAuthority {
 
         Menu authorityMenu = Menu.builder().menuNm("권한관리")
                 .menuOrder(7)
-                .menuLink("/auth/getAuthList")
+                .menuLink("/authority/getAdminList")
                 .viewAuthority(모든사용자.getAuthorityIdx())
                 .saveAuthority(모든사용자.getAuthorityIdx())
                 .build();
