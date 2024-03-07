@@ -1,6 +1,7 @@
 package auth.service;
 
 import auth.dto.AdminDTO;
+import auth.dto.AdminRegDTO;
 import auth.entity.Admin;
 import auth.entity.Authority;
 import auth.repository.AdminRepository;
@@ -30,7 +31,7 @@ public class AdminService {
     }
 
     @Transactional
-    public void saveAdmin(AdminDTO adminDTO) {
+    public void saveAdmin(AdminRegDTO adminDTO) {
         Authority authority = authorityRepository.findById(adminDTO.getAuthorityIdx()).orElseThrow();
 
         Admin newAdmin = Admin.builder()
@@ -54,4 +55,8 @@ public class AdminService {
         adminRepository.deleteById(adminIdx);
     }
 
+    //아이디중복체크
+    public AdminDTO checkIdDuplication(String userId) {
+        return adminRepository.findByUserId(userId).map(AdminDTO::new).orElse(null);
+    }
 }

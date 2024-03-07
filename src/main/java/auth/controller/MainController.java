@@ -1,6 +1,5 @@
 package auth.controller;
 
-import auth.dto.AdminDTO;
 import auth.dto.MenuDTO;
 import auth.service.MenuService;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.SessionAttribute;
 
 import java.util.List;
 
@@ -25,11 +23,7 @@ public class MainController {
     private final MenuService menuService;
 
     @GetMapping("/")
-    public String home(@SessionAttribute(name = "loginAdmin", required = false) AdminDTO adminDTO, Model model) {
-
-        if (adminDTO == null) {
-            return "login/login";
-        }
+    public String home(Model model) {
 
         List<MenuDTO> parentMenu = menuService.getMenuList();
 

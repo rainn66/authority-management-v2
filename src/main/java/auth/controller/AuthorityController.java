@@ -1,6 +1,7 @@
 package auth.controller;
 
 import auth.dto.AdminDTO;
+import auth.dto.AdminRegDTO;
 import auth.service.AdminService;
 import auth.service.AuthorityService;
 import jakarta.validation.Valid;
@@ -44,7 +45,7 @@ public class AuthorityController {
 
     @ResponseBody
     @PostMapping("/saveAdmin")
-    public Map<String, Object> saveAdmin(@RequestBody @Valid AdminDTO adminDTO) {
+    public Map<String, Object> saveAdmin(@RequestBody @Valid AdminRegDTO adminDTO) {
         Map<String, Object> rtnMap = new HashMap<>();
         adminService.saveAdmin(adminDTO);
         rtnMap.put("message", "저장되었습니다.");
@@ -73,4 +74,12 @@ public class AuthorityController {
         return rtnMap;
     }
 
+    @ResponseBody
+    @PostMapping("/checkId")
+    public Map<String, Object> checkId(@RequestBody Map<String, Object> param) {
+        Map<String, Object> rtnMap = new HashMap<>();
+        AdminDTO admin = adminService.checkIdDuplication(String.valueOf(param.get("userId")));
+        rtnMap.put("checkUser", admin);
+        return rtnMap;
+    }
 }

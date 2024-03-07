@@ -17,7 +17,7 @@
             </nav>
         </div>
         <div style="text-align: right;">
-            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#regAdminForm" onclick="fnCreateAdmin();">신규등록</button>
+            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#regAdminForm">관리자신규등록</button>
             <button type="button" class="btn btn-outline-primary" onclick="fnUpdateAdmin();">저장</button>
             <button type="button" class="btn btn-outline-secondary" onclick="fnDeleteAdmin();">삭제</button>
         </div>
@@ -112,10 +112,14 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <input type="hidden" id="newUserIdChk" name="newUserIdChk">
                 <div class="row mb-1">
                     <label for="newUserId" class="col-sm-4 col-form-label">ID</label>
-                    <div class="col-sm-8">
-                        <input type="text" class="form-control" id="newUserId" name="newUserId" disabled>
+                    <div class="col-sm-5">
+                        <input type="text" class="form-control" id="newUserId" name="newUserId">
+                    </div>
+                    <div class="col-sm-3">
+                        <button type="button" class="btn btn-outline-primary" onclick="fnCheckId();">중복확인</button>
                     </div>
                 </div>
             </div>
@@ -123,7 +127,7 @@
                 <div class="row mb-1">
                     <label for="newUserNm" class="col-sm-4 col-form-label">관리자명</label>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control" id="newUserNm" name="newUserNm" disabled>
+                        <input type="text" class="form-control" id="newUserNm" name="newUserNm">
                     </div>
                 </div>
             </div>
@@ -131,7 +135,7 @@
                 <div class="row mb-1">
                     <label for="password" class="col-sm-4 col-form-label">PASSWORD</label>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control" id="password" name="password" disabled>
+                        <input type="password" class="form-control" id="password" name="password">
                     </div>
                 </div>
             </div>
@@ -139,7 +143,7 @@
                 <div class="row mb-1">
                     <label for="passwordChk" class="col-sm-4 col-form-label">PASSWORD CHECK</label>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control" id="passwordChk" name="passwordChk" disabled>
+                        <input type="password" class="form-control" id="passwordChk" name="passwordChk">
                     </div>
                 </div>
             </div>
@@ -155,14 +159,18 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                <button type="button" class="btn btn-primary" onclick="fnCreateAdmin()">저장</button>
             </div>
         </div>
     </div>
 </div><!-- End Vertically centered Modal-->
 
 <script type="text/javascript" th:inline="javascript">
+
+    $(document).ready(function() {
+
+    });
 
     function fnClickAdminDetail(adminIdx) {
         $.ajax({
@@ -181,15 +189,6 @@
                 $('#regUserId').val(rtn.adminInfo.regUserId);
             }
         });
-    }
-
-    function fnCreateAdmin() {
-        $('#adminIdx').val('');
-        $('#userId').val('');
-        $('#userNm').val('');
-        $('#lastLoginDt').val('');
-        $('#authorityIdx').val('').prop("selected", true);
-        $('#regDt').val('');
     }
 
     function fnUpdateAdmin() {
@@ -229,6 +228,62 @@
                 contentType: 'application/json',
                 data: JSON.stringify({
                     adminIdx: adminIdx,
+                }),
+                success: function(rtn) {
+                    alert(rtn.message);
+                    location.href = '/authority/getAdminList'
+                }
+            });
+        }
+    }
+
+    //ID 중복체크
+    function fnCheckId() {
+        $.ajax({
+            url : '/authority/checkId',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                userId: $('#newUserId').val(),
+            }),
+            success: function(rtn) {
+                if (rtn.checkUser !== null) {
+                    alert('이미 사용중인 ID 입니다.')
+                    $('#newUserId').focus();
+                } else {
+                    alert('사용가능한 ID 입니다.')
+                    $('#newUserIdChk').val($('#newUserId').val());
+                }
+            }
+        });
+    }
+
+    function fnCreateAdmin() {
+        let userId = $('#newUserId').val();
+        let userIdChk = $('#newUserIdChk').val();
+        let password = $('#password').val();
+        let passwordChk = $('#passwordChk').val();
+
+        if (userId !== userIdChk) {
+            alert('ID 중복확인이 필요합니다.')
+            return;
+        }
+
+        if (password !== passwordChk) {
+            alert('비밀번호가 일치하지 않습니다.')
+            return;
+        }
+
+        if (confirm('저장하시겠습니까?')) {
+            $.ajax({
+                url : '/authority/saveAdmin',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    userId: userId,
+                    userNm: $('#newUserNm').val(),
+                    password: password,
+                    authorityIdx: $('#newAuthorityIdx').val()
                 }),
                 success: function(rtn) {
                     alert(rtn.message);

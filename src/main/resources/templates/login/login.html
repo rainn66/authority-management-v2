@@ -3,7 +3,7 @@
 
 <head>
     <th:block th:replace="~{fragment/head_inc :: head_inc}"/>
-    <title>login</title>
+    <title>LOGIN</title>
 </head>
 
 <body>
@@ -32,20 +32,23 @@
                                     <p class="text-center small">Enter your id & password to login</p>
                                 </div>
 
-                                <form class="row g-3 needs-validation" name="loginForm" id="loginForm" th:action="@{/login}" novalidate method="POST">
+                                <form class="row g-3 needs-validation" method="POST" th:object="${loginForm}" action="" th:action="@{/login}" novalidate >
 
                                     <div class="col-12">
-                                        <label for="userId" class="form-label">ID</label>
-                                        <div class="input-group has-validation">
-                                            <input type="text" name="userId" class="form-control" id="userId" required>
-                                            <div class="invalid-feedback">Please enter your userid.</div>
-                                        </div>
+                                        <label for="userId" class="form-label">Username</label>
+                                        <input type="text" class="form-control" id="userId" th:field="*{userId}" required>
+                                        <div class="invalid-feedback">Please enter your username.</div>
                                     </div>
 
                                     <div class="col-12">
-                                        <label for="password" class="form-label">PASSWORD</label>
-                                        <input type="password" name="password" class="form-control" id="password" required>
+                                        <label for="password" class="form-label">Password</label>
+                                        <input type="password" class="form-control" id="password" th:field="*{password}" required>
                                         <div class="invalid-feedback">Please enter your password!</div>
+                                    </div>
+
+                                    <div th:if="${#fields.hasGlobalErrors()}">
+                                        <p style="font-size:0.875em;color:#dc3545;" th:each="err : ${#fields.globalErrors()}"
+                                           th:text="${err}">전체 오류 메시지</p>
                                     </div>
 
                                     <div class="col-12">
@@ -57,14 +60,10 @@
                                     <div class="col-12">
                                         <button class="btn btn-primary w-100" type="submit">Login</button>
                                     </div>
-                                    <div class="col-12">
-                                        <p class="small mb-0">Don't have account? <a href="">Create an account</a></p>
-                                    </div>
                                 </form>
 
                             </div>
                         </div>
-
                         <div class="credits">
                             <!-- All the links in the footer should remain intact. -->
                             <!-- You can delete the links only if you purchased the pro version. -->
@@ -85,9 +84,7 @@
 <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
 <script type="text/javascript" th:inline="javascript">
-
 </script>
-
 </body>
 
 </html>
