@@ -1,5 +1,6 @@
 package auth.service;
 
+import auth.core.exception.MessageException;
 import auth.dto.MenuDTO;
 import auth.entity.Menu;
 import auth.repository.MenuRepository;
@@ -34,7 +35,8 @@ public class MenuService {
                     .viewAuthority(menu.getViewAuthority())
                     .saveAuthority(menu.getSaveAuthority())
                     .parentMenuIdx(menu.getParent() == null ? null : menu.getParent().getMenuIdx())
-                    .regDt(menu.getRegDt()).build()).orElseThrow();
+                    .regDt(menu.getRegDt()).build())
+                .orElseThrow(() -> new MessageException("메뉴를 찾을 수 없습니다."));
     }
 
     @Transactional
@@ -46,7 +48,8 @@ public class MenuService {
             parent = null;
             count = menuRepository.countByParentIsNull();
         } else {
-            parent = menuRepository.findById(menuDTO.getParentMenuIdx()).orElseThrow();
+//            parent = menuRepository.findById(menuDTO.getParentMenuIdx()).orElseThrow(() -> new MessageException("상위메뉴를 찾을 수 없습니다."));
+            parent = menuRepository.findById(5L).orElseThrow(() -> new MessageException("상위메뉴를 찾을 수 없습니다."));
             count = menuRepository.countByParentMenuIdx(parent.getMenuIdx());
         }
 
@@ -77,7 +80,7 @@ public class MenuService {
                     parent = null;
                     count = menuRepository.countByParentIsNull();
                 } else {
-                    parent = menuRepository.findById(menuDTO.getParentMenuIdx()).orElseThrow();
+                    parent = menuRepository.findById(menuDTO.getParentMenuIdx()).orElseThrow(() -> new MessageException("상위메뉴를 찾을 수 없습니다."));
                     count = menuRepository.countByParentMenuIdx(parent.getMenuIdx());
                 }
                 menu.update(count + 1,
@@ -111,7 +114,7 @@ public class MenuService {
     public void updateOrder(Long[] menuIdxList) {
         int orderVal = 1;
         for (Long menuIdx : menuIdxList) {
-            Menu menu = menuRepository.findById(menuIdx).orElseThrow();
+            Menu menu = menuRepository.findById(menuIdx).orElseThrow(() -> new MessageException("순서 변경 중 " + menuIdx + " 번 메뉴를 찾을 수 없습니다."));
             menu.updateOrder(orderVal);
             orderVal++;
         }

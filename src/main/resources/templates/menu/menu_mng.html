@@ -204,7 +204,7 @@
             let action = '';
             const menuIdx = $('#menuIdx').val();
 
-            if (menuIdx === '' || menuIdx === undefined) {
+            if (menuIdx === null || menuIdx === '') {
                 action = '/menu/saveMenu';
             } else {
                 action = '/menu/updateMenu';

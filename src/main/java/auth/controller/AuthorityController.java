@@ -1,11 +1,14 @@
 package auth.controller;
 
+import auth.core.exception.MessageException;
+import auth.core.util.CustomMap;
 import auth.dto.AdminDTO;
 import auth.dto.AdminRegDTO;
 import auth.service.AdminService;
 import auth.service.AuthorityService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,6 +21,7 @@ import java.util.Map;
 /**
  * 관리자 등록, 수정, 삭제 관리 / 관리자 권한관리 컨트롤러
  */
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/authority")
@@ -37,9 +41,14 @@ public class AuthorityController {
 
     @ResponseBody
     @PostMapping("/getAdminInfo")
-    public Map<String, Object> getAdminInfo(@RequestBody Map<String, Object> param) {
+    public Map<String, Object> getAdminInfo(@RequestBody CustomMap param) {
         Map<String, Object> rtnMap = new HashMap<>();
-        rtnMap.put("adminInfo", adminService.getAdminInfo(Long.parseLong(String.valueOf(param.get("adminIdx")))));
+        try {
+            rtnMap.put("adminInfo", adminService.getAdminInfo(param.getLong("adminIdx")));
+        } catch (Exception e) {
+            log.error("", e);
+            throw new MessageException(e.getMessage());
+        }
         return rtnMap;
     }
 
@@ -47,39 +56,59 @@ public class AuthorityController {
     @PostMapping("/saveAdmin")
     public Map<String, Object> saveAdmin(@RequestBody @Valid AdminRegDTO adminDTO) {
         Map<String, Object> rtnMap = new HashMap<>();
-        adminService.saveAdmin(adminDTO);
+        try {
+            adminService.saveAdmin(adminDTO);
+        } catch (Exception e) {
+            log.error("", e);
+            throw new MessageException(e.getMessage());
+        }
         rtnMap.put("message", "저장되었습니다.");
         return rtnMap;
     }
 
     @ResponseBody
     @PostMapping("/updateAdmin")
-    public Map<String, Object> updateAdmin(@RequestBody @Valid AdminDTO adminDTO, BindingResult bindingResult) throws Exception {
-        if (bindingResult.hasErrors()) {
-            FieldError error = bindingResult.getFieldErrors().get(0);
-            throw new Exception(error.getDefaultMessage());
-        }
+    public Map<String, Object> updateAdmin(@RequestBody @Valid AdminDTO adminDTO, BindingResult bindingResult) {
         Map<String, Object> rtnMap = new HashMap<>();
-        adminService.updateAdmin(adminDTO);
+        try {
+            if (bindingResult.hasErrors()) {
+                FieldError error = bindingResult.getFieldErrors().get(0);
+                throw new MessageException(error.getDefaultMessage());
+            }
+            adminService.updateAdmin(adminDTO);
+        } catch (Exception e) {
+            log.error("", e);
+            throw new MessageException(e.getMessage());
+        }
         rtnMap.put("message", "저장되었습니다.");
         return rtnMap;
     }
 
     @ResponseBody
     @PostMapping("/deleteAdmin")
-    public Map<String, Object> deleteAdmin(@RequestBody Map<String, Object> param) {
+    public Map<String, Object> deleteAdmin(@RequestBody CustomMap param) {
         Map<String, Object> rtnMap = new HashMap<>();
-        adminService.deleteAdmin(Long.parseLong(String.valueOf(param.get("adminIdx"))));
+        try {
+            adminService.deleteAdmin(param.getLong("adminIdx"));
+        } catch (Exception e) {
+            log.error("", e);
+            throw new MessageException(e.getMessage());
+        }
         rtnMap.put("message", "삭제되었습니다.");
         return rtnMap;
     }
 
     @ResponseBody
     @PostMapping("/checkId")
-    public Map<String, Object> checkId(@RequestBody Map<String, Object> param) {
+    public Map<String, Object> checkId(@RequestBody CustomMap param) {
         Map<String, Object> rtnMap = new HashMap<>();
-        AdminDTO admin = adminService.checkIdDuplication(String.valueOf(param.get("userId")));
-        rtnMap.put("checkUser", admin);
+        try {
+            AdminDTO admin = adminService.checkIdDuplication(param.getStr("userId"));
+            rtnMap.put("checkUser", admin);
+        } catch (Exception e) {
+            log.error("", e);
+            throw new MessageException(e.getMessage());
+        }
         return rtnMap;
     }
 }

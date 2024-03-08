@@ -50,6 +50,16 @@
     <script th:src="@{/assets/js/main.js}"></script>
 
     <script th:src="@{/common/common.js}"></script>
-
+    <script type="text/javascript">
+        $(document).ajaxError(function(event, rtn) {
+            try {
+                if (rtn.responseJSON.message && rtn.responseJSON.message !== '') {
+                    alert(rtn.responseJSON.message)
+                }
+            } catch (e) {
+                console.log(e);
+            }
+        });
+    </script>
 </th:block>
 </html>
