@@ -8,8 +8,11 @@ import auth.repository.AuthorityRepository;
 import auth.repository.MenuRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 
 @Component
@@ -23,7 +26,7 @@ public class InitAuthority {
     private final AdminRepository adminRepository;
 
     @PostConstruct
-    public void initAuthority() {
+    public void initAuthority() throws NoSuchAlgorithmException {
 
         //기본권한등록
         Authority 시스템관리자 = Authority.builder().authorityCd("AUTH003").authorityNm("시스템관리자").build();
@@ -38,24 +41,24 @@ public class InitAuthority {
         Menu menu = Menu.builder().menuNm("메뉴관리")
                 .menuOrder(1)
                 .menuLink("/menu/getMenuList")
-                .viewAuthority(시스템관리자.getAuthorityCd())
-                .saveAuthority(시스템관리자.getAuthorityCd())
+                .viewAuthority(일반관리자.getAuthorityCd())
+                .saveAuthority(일반관리자.getAuthorityCd())
                 .build();
         menuRepository.save(menu);
 
         Menu authority = Menu.builder().menuNm("권한관리")
                 .menuOrder(2)
                 .menuLink("/authority/getAdminList")
-                .viewAuthority(일반사용자.getAuthorityCd())
-                .saveAuthority(일반사용자.getAuthorityCd())
+                .viewAuthority(시스템관리자.getAuthorityCd())
+                .saveAuthority(시스템관리자.getAuthorityCd())
                 .build();
         menuRepository.save(authority);
 
         Menu authorityAdmin = Menu.builder().menuNm("관리자/관리자권한관리")
                 .menuOrder(1)
                 .menuLink("/authority/getAdminList")
-                .viewAuthority(일반사용자.getAuthorityCd())
-                .saveAuthority(일반사용자.getAuthorityCd())
+                .viewAuthority(시스템관리자.getAuthorityCd())
+                .saveAuthority(시스템관리자.getAuthorityCd())
                 .parent(authority)
                 .build();
         menuRepository.save(authorityAdmin);
@@ -63,16 +66,22 @@ public class InitAuthority {
         Menu authorityMenu = Menu.builder().menuNm("메뉴권한관리")
                 .menuOrder(2)
                 .menuLink("/authority/getMenuAll")
-                .viewAuthority(일반사용자.getAuthorityCd())
-                .saveAuthority(일반사용자.getAuthorityCd())
+                .viewAuthority(시스템관리자.getAuthorityCd())
+                .saveAuthority(시스템관리자.getAuthorityCd())
                 .parent(authority)
                 .build();
         menuRepository.save(authorityMenu);
 
-        //초기관리자 등록
+        //초기관리자 등록(단방향 암호화)
+        MessageDigest md = MessageDigest.getInstance("SHA-512");
+        md.reset();
+        md.update("admin".getBytes());
+        byte[] hashVale  = md.digest();
+        String password = new String(Base64.encodeBase64(hashVale, true));
+
         Admin admin = Admin.builder().userId("admin")
                 .userNm("최고관리자")
-                .password("admin")
+                .password(password)
                 .lastLoginDt(LocalDateTime.now())
                 .authority(시스템관리자).build();
         adminRepository.save(admin);

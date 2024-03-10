@@ -1,5 +1,6 @@
 package auth.controller;
 
+import auth.core.util.EncryptUtil;
 import auth.dto.AdminDTO;
 import auth.dto.LoginDTO;
 import auth.service.LoginService;
@@ -41,13 +42,13 @@ public class LoginController {
                         BindingResult bindingResult,
                         @RequestParam(defaultValue = "/") String redirectURL,
                         HttpServletRequest request
-                        ) {
+                        ) throws Exception {
         if (bindingResult.hasErrors()) {
             log.info("bindingResult : {}", bindingResult);
             return "login/login";
         }
 
-        AdminDTO adminDTO = loginService.login(form.getUserId(), form.getPassword());
+        AdminDTO adminDTO = loginService.login(form.getUserId(), EncryptUtil.passwordEncode(form.getPassword()));
 
         if (adminDTO == null) {
             bindingResult.reject("loginFail", "아이디 또는 비밀번호가 바르지 않습니다.");
@@ -71,7 +72,6 @@ public class LoginController {
         }
         return "redirect:/";
     }
-
 
 
 }

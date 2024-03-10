@@ -1,6 +1,7 @@
 package auth.service;
 
 import auth.core.exception.MessageException;
+import auth.core.util.EncryptUtil;
 import auth.dto.AdminDTO;
 import auth.dto.AdminRegDTO;
 import auth.entity.Admin;
@@ -33,15 +34,19 @@ public class AdminService {
 
     @Transactional
     public void saveAdmin(AdminRegDTO adminDTO) {
-        Authority authority = authorityRepository.findById(adminDTO.getAuthorityCd()).orElseThrow(() -> new MessageException("선택한 권한을 찾을 수 없습니다."));
+        try {
+            Authority authority = authorityRepository.findById(adminDTO.getAuthorityCd()).orElseThrow(() -> new MessageException("선택한 권한을 찾을 수 없습니다."));
 
-        Admin newAdmin = Admin.builder()
-                .userId(adminDTO.getUserId())
-                .userNm(adminDTO.getUserNm())
-                .password(adminDTO.getPassword())
-                .authority(authority)
-                .build();
-        adminRepository.save(newAdmin);
+            Admin newAdmin = Admin.builder()
+                    .userId(adminDTO.getUserId())
+                    .userNm(adminDTO.getUserNm())
+                    .password(EncryptUtil.passwordEncode(adminDTO.getPassword()))
+                    .authority(authority)
+                    .build();
+            adminRepository.save(newAdmin);
+        } catch (Exception e) {
+            throw new MessageException(e.getMessage());
+        }
     }
 
     @Transactional
