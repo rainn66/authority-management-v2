@@ -1,7 +1,10 @@
 package auth.controller;
 
+import auth.dto.AdminDTO;
 import auth.dto.MenuDTO;
 import auth.service.MenuService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -22,12 +25,20 @@ public class MainController {
 
     private final MenuService menuService;
 
+    /**
+     * 메인화면
+     */
     @GetMapping("/")
-    public String home(Model model) {
-
-        List<MenuDTO> parentMenu = menuService.getMenuList();
-
-        model.addAttribute("sidebar", parentMenu);
+    public String home(Model model, HttpServletRequest request) throws Exception {
+        try {
+            HttpSession session = request.getSession();
+            AdminDTO loginAdmin = (AdminDTO) session.getAttribute("loginAdmin");
+            List<MenuDTO> parentMenu = menuService.getSideMenuList(loginAdmin.getAuthorityCd());
+            model.addAttribute("sidebar", parentMenu);
+        } catch (Exception e) {
+            log.error("", e);
+            throw new Exception(e);
+        }
         return "index";
     }
 }

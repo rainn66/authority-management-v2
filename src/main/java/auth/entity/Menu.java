@@ -32,9 +32,9 @@ public class Menu extends CommonBase {
     private String menuNm;
     private String menuLink;
 
-    private Long viewAuthority;
+    private String viewAuthority;
 
-    private Long saveAuthority;
+    private String saveAuthority;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_menu_idx")
@@ -44,7 +44,7 @@ public class Menu extends CommonBase {
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
     private List<Menu> childMenu;
 
-    public void update(int menuOrder, String menuNm, String menuLink, Long viewAuthority, Long saveAuthority, Menu parent) {
+    public void update(int menuOrder, String menuNm, String menuLink, String viewAuthority, String saveAuthority, Menu parent) {
         this.menuOrder = menuOrder;
         this.menuNm = menuNm;
         this.menuLink = menuLink;
@@ -52,7 +52,7 @@ public class Menu extends CommonBase {
         this.saveAuthority = saveAuthority;
         this.parent = parent;
     }
-    public void update(String menuNm, String menuLink, Long viewAuthority, Long saveAuthority) {
+    public void update(String menuNm, String menuLink, String viewAuthority, String saveAuthority) {
         this.menuNm = menuNm;
         this.menuLink = menuLink;
         this.viewAuthority = viewAuthority;

@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+/**
+ * 로그인 관련 컨트롤러
+ */
 @Slf4j
 @Controller
 @RequiredArgsConstructor
@@ -22,17 +25,23 @@ public class LoginController {
 
     private final LoginService loginService;
 
+    /**
+     * 로그인페이지
+     */
     @GetMapping("/login")
     public String login(@ModelAttribute("loginForm") LoginDTO from) {
         return "login/login";
     }
 
+    /**
+     * 로그인
+     */
     @PostMapping("/login")
     public String login(@Valid @ModelAttribute("loginForm") LoginDTO form,
                         BindingResult bindingResult,
                         @RequestParam(defaultValue = "/") String redirectURL,
                         HttpServletRequest request
-                        ) throws Exception {
+                        ) {
         if (bindingResult.hasErrors()) {
             log.info("bindingResult : {}", bindingResult);
             return "login/login";
@@ -51,6 +60,9 @@ public class LoginController {
         return "redirect:" + redirectURL;
     }
 
+    /**
+     * 로그아웃
+     */
     @PostMapping("/logout")
     public String logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);

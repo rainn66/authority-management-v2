@@ -3,12 +3,7 @@ package auth.dto;
 import auth.entity.Menu;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
@@ -29,11 +24,11 @@ public class MenuDTO {
     @NotEmpty
     private String menuLink;
 
-    @NotNull
-    private Long viewAuthority;
+    @NotEmpty
+    private String viewAuthority;
 
-    @NotNull
-    private Long saveAuthority;
+    @NotEmpty
+    private String saveAuthority;
 
     //변경 전 상위메뉴
     private Long bfParentMenuIdx;

@@ -22,14 +22,14 @@ public class AdminDTO {
     @NotEmpty
     private String userNm;
 
-    private String password;
+//    private String password;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime lastLoginDt;
 
     @NotNull
-    private Long authorityIdx;
+    private String authorityCd;
 
     private String authorityNm;
 
@@ -37,9 +37,9 @@ public class AdminDTO {
         this.adminIdx = admin.getAdminIdx();
         this.userId = admin.getUserId();
         this.userNm = admin.getUserNm();
-        this.password = admin.getPassword();
+//        this.password = admin.getPassword();
         this.lastLoginDt = admin.getLastLoginDt();
-        this.authorityIdx = admin.getAuthority().getAuthorityIdx();
+        this.authorityCd = admin.getAuthority().getAuthorityCd();
         this.authorityNm = admin.getAuthority().getAuthorityNm();
     }
 }

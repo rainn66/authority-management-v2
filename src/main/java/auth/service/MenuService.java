@@ -25,6 +25,11 @@ public class MenuService {
                 .map(MenuDTO::new).collect(Collectors.toList());
     }
 
+    public List<MenuDTO> getSideMenuList(String viewAuthorityCd) {
+        return menuRepository.findBySideMenu(viewAuthorityCd).stream()
+                .map(MenuDTO::new).collect(Collectors.toList());
+    }
+
     public MenuDTO getMenuInfo(Long menuIdx) {
         return menuRepository.findById(menuIdx).map(menu ->
                 MenuDTO.builder()
@@ -48,8 +53,7 @@ public class MenuService {
             parent = null;
             count = menuRepository.countByParentIsNull();
         } else {
-//            parent = menuRepository.findById(menuDTO.getParentMenuIdx()).orElseThrow(() -> new MessageException("상위메뉴를 찾을 수 없습니다."));
-            parent = menuRepository.findById(5L).orElseThrow(() -> new MessageException("상위메뉴를 찾을 수 없습니다."));
+            parent = menuRepository.findById(menuDTO.getParentMenuIdx()).orElseThrow(() -> new MessageException("상위메뉴를 찾을 수 없습니다."));
             count = menuRepository.countByParentMenuIdx(parent.getMenuIdx());
         }
 

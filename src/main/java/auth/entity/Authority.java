@@ -1,14 +1,8 @@
 package auth.entity;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
@@ -18,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class Authority extends CommonBase{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long authorityIdx;
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String authorityCd;
     private String authorityNm;
 }

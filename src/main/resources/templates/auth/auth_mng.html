@@ -12,7 +12,7 @@
             <nav>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/">Home</a></li>
-                    <li class="breadcrumb-item">권한관리</li>
+                    <li class="breadcrumb-item">관리자/관리자권한관리</li>
                 </ol>
             </nav>
         </div>
@@ -80,11 +80,11 @@
                         </div>
 
                         <div class="row mb-3">
-                            <label for="authorityIdx" class="col-sm-4 col-form-label">권한</label>
+                            <label for="authorityCd" class="col-sm-4 col-form-label">권한</label>
                             <div class="col-sm-8">
-                                <select class="form-select" aria-label="Default select example" id="authorityIdx" name="authorityIdx">
+                                <select class="form-select" aria-label="Default select example" id="authorityCd" name="authorityCd">
                                     <option value="" selected>선택</option>
-                                    <option th:each="authority : ${authorities}" th:value="${authority.authorityIdx}" th:text="${authority.authorityNm}">null</option>
+                                    <option th:each="authority : ${authorities}" th:value="${authority.authorityCd}" th:text="${authority.authorityNm}">null</option>
                                 </select>
                             </div>
                         </div>
@@ -149,11 +149,11 @@
             </div>
             <div class="modal-body">
                 <div class="row mb-1">
-                    <label for="newAuthorityIdx" class="col-sm-4 col-form-label">권한</label>
+                    <label for="newAuthorityCd" class="col-sm-4 col-form-label">권한</label>
                     <div class="col-sm-8">
-                        <select class="form-select" aria-label="Default select example" id="newAuthorityIdx" name="newAuthorityIdx">
+                        <select class="form-select" aria-label="Default select example" id="newAuthorityCd" name="newAuthorityCd">
                             <option value="" selected>선택</option>
-                            <option th:each="authority : ${authorities}" th:value="${authority.authorityIdx}" th:text="${authority.authorityNm}">null</option>
+                            <option th:each="authority : ${authorities}" th:value="${authority.authorityCd}" th:text="${authority.authorityNm}">null</option>
                         </select>
                     </div>
                 </div>
@@ -166,7 +166,7 @@
     </div>
 </div><!-- End Vertically centered Modal-->
 
-<script type="text/javascript" th:inline="javascript">
+<script type="text/javascript">
 
     $(document).ready(function() {
 
@@ -185,7 +185,7 @@
                 $('#userId').val(rtn.adminInfo.userId);
                 $('#userNm').val(rtn.adminInfo.userNm);
                 $('#lastLoginDt').val(rtn.adminInfo.lastLoginDt);
-                $('#authorityIdx').val(rtn.adminInfo.authorityIdx).prop("selected", true);
+                $('#authorityCd').val(rtn.adminInfo.authorityCd).prop("selected", true);
                 $('#regUserId').val(rtn.adminInfo.regUserId);
             }
         });
@@ -205,7 +205,7 @@
                 data: JSON.stringify({
                     adminIdx: adminIdx,
                     userNm: $('#userNm').val(),
-                    authorityIdx: $('#authorityIdx').val()
+                    authorityCd: $('#authorityCd').val()
                 }),
                 success: function(rtn) {
                     alert(rtn.message);
@@ -283,7 +283,7 @@
                     userId: userId,
                     userNm: $('#newUserNm').val(),
                     password: password,
-                    authorityIdx: $('#newAuthorityIdx').val()
+                    authorityCd: $('#newAuthorityCd').val()
                 }),
                 success: function(rtn) {
                     alert(rtn.message);

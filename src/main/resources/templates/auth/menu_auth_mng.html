@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{fragment/head_inc :: head_inc}"/>
+    <title>메뉴관리</title>
+</head>
+<body>
+<main id="main" class="main">
+    <div class="pagetitle" style="display:flex;justify-content: space-between">
+        <div>
+            <h1>권한관리</h1>
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item">메뉴권한관리</li>
+                </ol>
+            </nav>
+        </div>
+        <div style="text-align: right;">
+            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#regAdminForm">관리자신규등록</button>
+            <button type="button" class="btn btn-outline-primary" onclick="fnUpdateAdmin();">저장</button>
+            <button type="button" class="btn btn-outline-secondary" onclick="fnDeleteAdmin();">삭제</button>
+        </div>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">관리자목록</h5>
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th style="text-align:center;"></th>
+                                <th style="text-align:center;">메뉴명</th>
+                                <th style="text-align:center;">메뉴링크</th>
+                                <th style="text-align:center;">조회권한</th>
+                                <th style="text-align:center;">등록/수정/삭제권한</th>
+                                <th style="text-align:center;">등록자</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+</body>
+<script type="text/javascript">
+
+</script>
+</html>

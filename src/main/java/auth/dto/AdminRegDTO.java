@@ -25,5 +25,5 @@ public class AdminRegDTO {
     private String password;
 
     @NotNull
-    private Long authorityIdx;
+    private String authorityCd;
 }

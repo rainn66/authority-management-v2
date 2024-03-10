@@ -33,7 +33,7 @@ public class AdminService {
 
     @Transactional
     public void saveAdmin(AdminRegDTO adminDTO) {
-        Authority authority = authorityRepository.findById(adminDTO.getAuthorityIdx()).orElseThrow(() -> new MessageException("선택한 권한을 찾을 수 없습니다."));
+        Authority authority = authorityRepository.findById(adminDTO.getAuthorityCd()).orElseThrow(() -> new MessageException("선택한 권한을 찾을 수 없습니다."));
 
         Admin newAdmin = Admin.builder()
                 .userId(adminDTO.getUserId())
@@ -46,7 +46,7 @@ public class AdminService {
 
     @Transactional
     public void updateAdmin(AdminDTO adminDTO) {
-        Authority authority = authorityRepository.findById(adminDTO.getAuthorityIdx()).orElseThrow(() -> new MessageException("선택한 권한을 찾을 수 없습니다."));
+        Authority authority = authorityRepository.findById(adminDTO.getAuthorityCd()).orElseThrow(() -> new MessageException("선택한 권한을 찾을 수 없습니다."));
         Admin findAdmin = adminRepository.findById(adminDTO.getAdminIdx()).orElseThrow(() -> new MessageException("사용자를 찾을 수 없습니다."));
         findAdmin.update(adminDTO.getUserNm(), authority);
     }

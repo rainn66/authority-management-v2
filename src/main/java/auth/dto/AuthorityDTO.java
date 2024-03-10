@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AuthorityDTO {
 
-    private Long authorityIdx;
+    private String authorityCd;
 
     private String authorityNm;
 
@@ -24,7 +24,7 @@ public class AuthorityDTO {
     private LocalDateTime regDt;
 
     public AuthorityDTO(Authority authority) {
-        this.authorityIdx = authority.getAuthorityIdx();
+        this.authorityCd = authority.getAuthorityCd();
         this.authorityNm = authority.getAuthorityNm();
         this.regUserId = authority.getRegUserId();
         this.regDt = authority.getRegDt();

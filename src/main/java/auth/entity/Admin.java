@@ -32,7 +32,7 @@ public class Admin extends CommonBase {
     private LocalDateTime lastLoginDt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "authority_idx")
+    @JoinColumn(name = "authority_cd")
     private Authority authority;
 
     public void update(String userNm, Authority authority) {
