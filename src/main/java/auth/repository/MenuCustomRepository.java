@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface MenuCustomRepository {
 
-    List<Menu> findBySideMenu(String authorityCd);
+    List<Menu> findByViewAuthority(String authorityCd);
 
 }

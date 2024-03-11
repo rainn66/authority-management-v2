@@ -26,7 +26,7 @@ public class MenuService {
     }
 
     public List<MenuDTO> getSideMenuList(String viewAuthorityCd) {
-        return menuRepository.findBySideMenu(viewAuthorityCd).stream()
+        return menuRepository.findByViewAuthority(viewAuthorityCd).stream()
                 .map(MenuDTO::new).collect(Collectors.toList());
     }
 
@@ -77,7 +77,8 @@ public class MenuService {
 
         findMenu.ifPresent(menu -> {
             //상위 메뉴가 이전과 달라졌을 경우(최상위 메뉴는 타 메뉴의 하위로 이동 불가능)
-            if (!menuDTO.getBfParentMenuIdx().equals(menuDTO.getParentMenuIdx())) {
+//            if (!menuDTO.getBfParentMenuIdx().equals(menuDTO.getParentMenuIdx())) {
+            if ("Y".equals(menuDTO.getParentMenuChgYn())) {
                 Menu parent;
                 int count;
                 if (menuDTO.getParentMenuIdx() == null) {

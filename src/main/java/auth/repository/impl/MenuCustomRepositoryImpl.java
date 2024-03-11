@@ -23,19 +23,31 @@ public class MenuCustomRepositoryImpl implements MenuCustomRepository {
     }
 
     @Override
-    public List<Menu> findBySideMenu(String authorityCd) {
+    public List<Menu> findByViewAuthority(String authorityCd) {
         QMenu menuChild = new QMenu("menuChild");
+
         log.info("authorityCd {}", authorityCd);
         return jpaQueryFactory
                 .selectFrom(menu)
                 .leftJoin(menu.childMenu, menuChild).fetchJoin()
                 .where(menu.parent.isNull(),
-                        viewAuthorityIn(authorityCd))
+                        viewAuthorityIn(authorityCd),
+                        childViewAuthorityIn(menuChild, authorityCd))
                 .orderBy(menu.menuIdx.asc())
                 .fetch();
     }
 
     private Predicate viewAuthorityIn(String authorityCd) {
+        List<String> authorityCdList = setAuthorityList(authorityCd);
+        return menu.viewAuthority.in(authorityCdList);
+    }
+
+    private Predicate childViewAuthorityIn(QMenu childMenu, String authorityCd) {
+        List<String> authorityCdList = setAuthorityList(authorityCd);
+        return childMenu.viewAuthority.in(authorityCdList).or(childMenu.isNull());
+    }
+
+    private List<String> setAuthorityList(String authorityCd) {
         List<String> authorityCdList = new ArrayList<>();
         authorityCdList.add("AUTH001");
         if ("AUTH002".equals(authorityCd)) {
@@ -44,7 +56,6 @@ public class MenuCustomRepositoryImpl implements MenuCustomRepository {
             authorityCdList.add("AUTH002");
             authorityCdList.add("AUTH003");
         }
-        log.info("authorityCdList {}", authorityCdList);
-        return menu.viewAuthority.in(authorityCdList);
+        return authorityCdList;
     }
 }

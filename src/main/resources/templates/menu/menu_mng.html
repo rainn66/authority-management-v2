@@ -202,12 +202,16 @@
     function fnSaveMenu() {
         if (confirm("저장하시겠습니까?")) {
             let action = '';
+            let parentMenuChgYn = 'N';
             const menuIdx = $('#menuIdx').val();
 
             if (menuIdx === null || menuIdx === '') {
                 action = '/menu/saveMenu';
             } else {
                 action = '/menu/updateMenu';
+                if ($('#bfParentMenuIdx').val() !== $('#parentMenuIdx').val()) {
+                    parentMenuChgYn = 'Y';
+                }
             }
             $.ajax({
                 url : action,
@@ -217,8 +221,8 @@
                     menuIdx: menuIdx,
                     menuNm: $('#menuNm').val(),
                     menuLink: $('#menuLink').val(),
-                    bfParentMenuIdx: $('#bfParentMenuIdx').val(),
                     parentMenuIdx: $('#parentMenuIdx').val(),
+                    parentMenuChgYn: parentMenuChgYn,
                     viewAuthority: $('#viewAuthority').val(),
                     saveAuthority: $('#saveAuthority').val()
                 }),
