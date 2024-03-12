@@ -35,6 +35,8 @@ public class MenuDTO {
 
     private Long parentMenuIdx;
 
+    private String parentMenuNm;
+
     private String parentMenuChgYn;
 
     private List<MenuDTO> childMenu;
@@ -42,6 +44,8 @@ public class MenuDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime regDt;
+
+    private String regUserId;
 
     public MenuDTO(Menu menu) {
         this.menuIdx = menu.getMenuIdx();
@@ -51,7 +55,9 @@ public class MenuDTO {
         this.viewAuthority = menu.getViewAuthority();
         this.saveAuthority = menu.getSaveAuthority();
         this.parentMenuIdx = menu.getParent() == null ? null : menu.getParent().getMenuIdx();
+        this.parentMenuNm = menu.getParent() == null ? null : menu.getParent().getMenuNm();
         this.childMenu = menu.getChildMenu().stream().map(MenuDTO::new).collect(Collectors.toList());
         this.regDt = menu.getRegDt();
+        this.regUserId = menu.getRegUserId();
     }
 }

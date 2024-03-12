@@ -2,10 +2,12 @@ package auth.controller;
 
 import auth.core.exception.MessageException;
 import auth.core.util.CustomMap;
+import auth.dto.AdminDTO;
 import auth.dto.MenuDTO;
 import auth.service.AuthorityService;
 import auth.service.MenuService;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,10 +37,12 @@ public class MenuController {
      * 메뉴 목록 조회(+권한목록)
      */
     @GetMapping("/getMenuList")
-    public String getMenuList(Model model, HttpServletResponse response) throws Exception {
+    public String getMenuList(Model model, HttpServletRequest request) throws Exception {
         //비동기 호출 아니므로 MessageException 사용불가
         try {
-            model.addAttribute("menus", menuService.getMenuList());
+            HttpSession session = request.getSession();
+            AdminDTO loginAdmin = (AdminDTO) session.getAttribute("loginAdmin");
+            model.addAttribute("menus", menuService.getSideMenuList(loginAdmin.getAuthorityCd()));
             model.addAttribute("authorities", authorityService.getAuthorityList());
         } catch (Exception e) {
             log.error("", e);

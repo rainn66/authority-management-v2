@@ -1,11 +1,11 @@
 package auth.service;
 
 import auth.core.exception.MessageException;
+import auth.core.util.CustomMap;
 import auth.dto.MenuDTO;
 import auth.entity.Menu;
 import auth.repository.MenuRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,11 +21,14 @@ public class MenuService {
     private final MenuRepository menuRepository;
 
     public List<MenuDTO> getMenuList() {
-        return menuRepository.findByParentIsNull(Sort.by(Sort.Direction.ASC, "menuOrder")).stream()
-                .map(MenuDTO::new).collect(Collectors.toList());
+        return menuRepository.findAll().stream().map(MenuDTO::new).collect(Collectors.toList());
     }
 
+    //사이드메뉴 가져오기
     public List<MenuDTO> getSideMenuList(String viewAuthorityCd) {
+        /* //조회권한 미적용 쿼리
+        return menuRepository.findByParentIsNull(Sort.by(Sort.Direction.ASC, "menuOrder")).stream()
+                .map(MenuDTO::new).collect(Collectors.toList());*/
         return menuRepository.findByViewAuthority(viewAuthorityCd).stream()
                 .map(MenuDTO::new).collect(Collectors.toList());
     }
@@ -125,5 +128,14 @@ public class MenuService {
         }
     }
 
-
+    @Transactional
+    public void updateAllMenuAuth(List<CustomMap> param) {
+        for (CustomMap map: param) {
+            Long menuIdx = map.getLong("menuIdx");
+            Optional<Menu> findMenu = menuRepository.findById(menuIdx);
+            findMenu.ifPresent(menu -> {
+                menu.update(map.getStr("viewAuthority"), map.getStr("saveAuthority"));
+            });
+        }
+    }
 }

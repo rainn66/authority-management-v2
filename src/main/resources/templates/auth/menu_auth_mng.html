@@ -3,6 +3,22 @@
 <head>
     <th:block th:replace="~{fragment/head_inc :: head_inc}"/>
     <title>메뉴관리</title>
+    <style>
+        .table th {
+            text-align:center;
+            vertical-align: middle;
+        }
+        .table td {
+            text-align:center;
+            vertical-align: middle;
+        }
+        .table th select {
+            text-align: center;
+        }
+        .table td select {
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
 <main id="main" class="main">
@@ -17,9 +33,7 @@
             </nav>
         </div>
         <div style="text-align: right;">
-            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#regAdminForm">관리자신규등록</button>
-            <button type="button" class="btn btn-outline-primary" onclick="fnUpdateAdmin();">저장</button>
-            <button type="button" class="btn btn-outline-secondary" onclick="fnDeleteAdmin();">삭제</button>
+            <button type="button" class="btn btn-outline-primary" onclick="fnUpdateMenuAuthority();">일괄저장</button>
         </div>
     </div><!-- End Page Title -->
 
@@ -29,20 +43,64 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">관리자목록</h5>
-                        <table class="table table-hover">
+                        <table class="table">
+                            <colgroup>
+                                <col style="width:5%;">
+                                <col style="width:16%;">
+                                <col style="width:16%;">
+                                <col style="width:15%;">
+                                <col style="width:15%;">
+                                <col style="width:15%;">
+                                <col style="width:8%;">
+                                <col style="width:10%;">
+                            </colgroup>
                             <thead>
                             <tr>
-                                <th style="text-align:center;"></th>
-                                <th style="text-align:center;">메뉴명</th>
-                                <th style="text-align:center;">메뉴링크</th>
-                                <th style="text-align:center;">조회권한</th>
-                                <th style="text-align:center;">등록/수정/삭제권한</th>
-                                <th style="text-align:center;">등록자</th>
+                                <th>
+                                    <input class="form-check-input" type="checkbox" id="chkMenuAll" name="chkMenuAll" checked>
+                                </th>
+                                <th>메뉴명</th>
+                                <th>메뉴링크</th>
+                                <th>상위메뉴</th>
+                                <th>
+                                    <select class="form-select" aria-label="Default select example" id="viewAuthority" name="viewAuthority">
+                                        <option value="" selected>조회권한</option>
+                                        <option th:each="authority : ${authorities}" th:value="${authority.authorityCd}" th:text="${authority.authorityNm}">null</option>
+                                    </select>
+                                </th>
+                                <th>
+                                    <select class="form-select" aria-label="Default select example" id="saveAuthority" name="saveAuthority">
+                                        <option value="" selected>등록/수정/삭제권한</option>
+                                        <option th:each="authority : ${authorities}" th:value="${authority.authorityCd}" th:text="${authority.authorityNm}">null</option>
+                                    </select>
+                                </th>
+                                <th>등록자</th>
+                                <th>등록일시</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-
+                            <tr th:each="menu, stat : ${menuList}">
+                                <input type="hidden" name="menuIdx" th:value="${menu.menuIdx}">
+                                <td>
+                                    <input class="form-check-input" type="checkbox" name="chkMenu" th:value="${menu.menuIdx}" checked>
+                                </td>
+                                <td th:text="${menu.menuNm}">-</td>
+                                <td th:text="${menu.menuLink}"></td>
+                                <td th:text="${menu.parentMenuNm} ne null ? ${menu.parentMenuNm} : '-'">-</td>
+                                <td>
+                                    <select class="form-select" aria-label="Default select example" name="viewAuthority" th:id="'viewAuthority_' + ${menu.menuIdx}">
+                                        <option value="" selected>선택</option>
+                                        <option th:each="authority : ${authorities}" th:value="${authority.authorityCd}" th:text="${authority.authorityNm}" th:selected="${menu.viewAuthority eq authority.authorityCd}">null</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="form-select" aria-label="Default select example" name="saveAuthority" th:id="'saveAuthority_' + ${menu.menuIdx}">
+                                        <option value="" selected>선택</option>
+                                        <option th:each="authority : ${authorities}" th:value="${authority.authorityCd}" th:text="${authority.authorityNm}" th:selected="${menu.saveAuthority eq authority.authorityCd}">null</option>
+                                    </select>
+                                </td>
+                                <td th:text="${menu.regUserId}"></td>
+                                <td th:text="${#temporals.format(menu.regDt, 'yyyy-MM-dd HH:mm:ss')}"></td>
                             </tr>
                             </tbody>
                         </table>
@@ -55,6 +113,55 @@
 </main>
 </body>
 <script type="text/javascript">
+    $(document).ready(function() {
+        $('#chkMenuAll').click(function() {
+            if($(this).is(":checked")) {
+                $("input[name=chkMenu]").prop("checked", true);
+            } else {
+                $("input[name=chkMenu]").prop("checked", false);
+            }
+        });
+        changeSelectBox('viewAuthority');
+        changeSelectBox('saveAuthority');
+    });
 
+    function changeSelectBox(idNm) {
+        $('#' + idNm).on('change', function() {
+            let authorityIdx = $('#' + idNm).val();
+            let arr = []
+            $('input[name=chkMenu]').each(function() {
+                if ($(this).is(":checked")) {
+                    arr.push($(this).val());
+                }
+            });
+            for (let i in arr) {
+                $('#' + idNm + '_' + arr[i]).val(authorityIdx).prop("selected", true)
+            }
+        });
+    }
+
+    function fnUpdateMenuAuthority() {
+        if (confirm("일괄 저장하시겠습니까?")) {
+            let dataArr = [];
+            $('input[name=menuIdx]').each(function() {
+                let data = {
+                    "menuIdx": $(this).val(),
+                    "viewAuthority": $('#viewAuthority_' + $(this).val()).val(),
+                    "saveAuthority": $('#saveAuthority_' + $(this).val()).val()
+                }
+                dataArr.push(data);
+            })
+            console.log(dataArr);
+            $.ajax({
+                url : '/authority/updateAllMenuAuth',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(dataArr),
+                success: function(rtn) {
+                    alert(rtn.message);
+                }
+            });
+        }
+    }
 </script>
 </html>

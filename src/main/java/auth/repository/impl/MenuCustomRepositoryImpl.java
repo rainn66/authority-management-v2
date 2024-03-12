@@ -33,7 +33,7 @@ public class MenuCustomRepositoryImpl implements MenuCustomRepository {
                 .where(menu.parent.isNull(),
                         viewAuthorityIn(authorityCd),
                         childViewAuthorityIn(menuChild, authorityCd))
-                .orderBy(menu.menuIdx.asc())
+                .orderBy(menu.menuOrder.asc())
                 .fetch();
     }
 

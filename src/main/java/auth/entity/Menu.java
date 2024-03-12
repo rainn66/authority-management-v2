@@ -58,6 +58,10 @@ public class Menu extends CommonBase {
         this.viewAuthority = viewAuthority;
         this.saveAuthority = saveAuthority;
     }
+    public void update(String viewAuthority, String saveAuthority) {
+        this.viewAuthority = viewAuthority;
+        this.saveAuthority = saveAuthority;
+    }
     public void updateOrder(int menuOrder) {
         this.menuOrder = menuOrder;
     }

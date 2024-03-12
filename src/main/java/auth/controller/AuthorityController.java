@@ -6,6 +6,7 @@ import auth.dto.AdminDTO;
 import auth.dto.AdminRegDTO;
 import auth.service.AdminService;
 import auth.service.AuthorityService;
+import auth.service.MenuService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,6 +32,8 @@ public class AuthorityController {
     private final AuthorityService authorityService;
 
     private final AdminService adminService;
+
+    private final MenuService menuService;
 
     /**
      * 관리자 목록 조회
@@ -139,13 +143,34 @@ public class AuthorityController {
      * 메뉴 목록 (메뉴권한 일괄 관리)
      */
     @GetMapping("/getMenuAll")
-    public String getMenuAll() {
+    public String getMenuAll(Model model) throws Exception {
+        try {
+            model.addAttribute("menuList", menuService.getMenuList());
+            model.addAttribute("authorities", authorityService.getAuthorityList());
+        } catch (Exception e) {
+            log.error("", e);
+            throw new Exception(e);
+        }
         return "auth/menu_auth_mng";
     }
 
+    /**
+     * 메뉴 권한 일괄 저장
+     */
+    @ResponseBody
+    @PostMapping("/updateAllMenuAuth")
+    public Map<String, Object> updateMenuAuth(@RequestBody List<CustomMap> param) {
+        Map<String, Object> rtnMap = new HashMap<>();
+        try {
+            log.info("paramList : {}", param);
 
+            menuService.updateAllMenuAuth(param);
 
-
-
-
+        } catch (Exception e) {
+            log.error("", e);
+            throw new MessageException(e.getMessage());
+        }
+        rtnMap.put("message", "저장되었습니다.");
+        return rtnMap;
+    }
 }
