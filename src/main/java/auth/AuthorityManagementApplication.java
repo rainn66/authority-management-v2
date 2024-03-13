@@ -1,5 +1,6 @@
 package auth;
 
+import auth.core.session.SessionConstants;
 import auth.dto.AdminDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -29,8 +30,8 @@ public class AuthorityManagementApplication {
 			if (RequestContextHolder.getRequestAttributes() != null) {
 				HttpServletRequest req = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 				HttpSession session = req.getSession();
-				if (session.getAttribute("loginAdmin") != null) {
-					AdminDTO currentUser = (AdminDTO) session.getAttribute("loginAdmin");
+				if (session.getAttribute(SessionConstants.LOGIN_ADMIN) != null) {
+					AdminDTO currentUser = (AdminDTO) session.getAttribute(SessionConstants.LOGIN_ADMIN);
 					return Optional.of(currentUser.getUserId());
 				} else {
 					return Optional.of("Anonymous");

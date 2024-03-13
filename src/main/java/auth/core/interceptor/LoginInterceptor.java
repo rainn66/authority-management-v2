@@ -1,5 +1,6 @@
 package auth.core.interceptor;
 
+import auth.core.session.SessionConstants;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -17,7 +18,7 @@ public class LoginInterceptor implements HandlerInterceptor {
 
         HttpSession session = request.getSession();
 
-        if (session == null || session.getAttribute("loginAdmin") == null) {
+        if (session == null || session.getAttribute(SessionConstants.LOGIN_ADMIN) == null) {
             log.info("!미인증 사용자!");
             response.sendRedirect("/login?redirectURL=" + requestURI);
             return false;

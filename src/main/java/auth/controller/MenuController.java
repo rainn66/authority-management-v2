@@ -1,6 +1,7 @@
 package auth.controller;
 
 import auth.core.exception.MessageException;
+import auth.core.session.SessionConstants;
 import auth.core.util.CustomMap;
 import auth.dto.AdminDTO;
 import auth.dto.MenuDTO;
@@ -41,7 +42,7 @@ public class MenuController {
         //비동기 호출 아니므로 MessageException 사용불가
         try {
             HttpSession session = request.getSession();
-            AdminDTO loginAdmin = (AdminDTO) session.getAttribute("loginAdmin");
+            AdminDTO loginAdmin = (AdminDTO) session.getAttribute(SessionConstants.LOGIN_ADMIN);
             model.addAttribute("menus", menuService.getSideMenuList(loginAdmin.getAuthorityCd()));
             model.addAttribute("authorities", authorityService.getAuthorityList());
         } catch (Exception e) {

@@ -1,5 +1,6 @@
 package auth.controller;
 
+import auth.core.session.SessionConstants;
 import auth.dto.AdminDTO;
 import auth.dto.MenuDTO;
 import auth.service.MenuService;
@@ -32,7 +33,7 @@ public class MainController {
     public String home(Model model, HttpServletRequest request) throws Exception {
         try {
             HttpSession session = request.getSession();
-            AdminDTO loginAdmin = (AdminDTO) session.getAttribute("loginAdmin");
+            AdminDTO loginAdmin = (AdminDTO) session.getAttribute(SessionConstants.LOGIN_ADMIN);
             List<MenuDTO> parentMenu = menuService.getSideMenuList(loginAdmin.getAuthorityCd());
             model.addAttribute("sidebar", parentMenu);
         } catch (Exception e) {

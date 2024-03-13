@@ -14,7 +14,7 @@
 
         <li th:each="menu, menuStat : ${sidebar}" class="nav-item">
             <div th:if="${#lists.size(menu.childMenu) > 0}">
-                <a th:onclick="|fnClickMenu('@{${menu.menuLink}}')|" class="nav-link collapsed" th:attr="data-bs-target='#menuIdx' + ${menu.menuIdx}" data-bs-toggle="collapse" href="#">
+                <a class="nav-link collapsed" th:attr="data-bs-target='#menuIdx' + ${menu.menuIdx}" data-bs-toggle="collapse" href="#">
                     <i class="bi bi-menu-button-wide"></i>
                     <span th:text="${menu.menuNm}">null</span>
                     <i class="bi bi-chevron-down ms-auto"></i>

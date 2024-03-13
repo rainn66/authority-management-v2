@@ -51,6 +51,14 @@
 
     <script th:src="@{/common/common.js}"></script>
     <script type="text/javascript">
+        $(document).ajaxSend(function(event, req) {
+            try {
+                req.setRequestHeader("nowURL", window.location.pathname);
+            } catch (e) {
+                console.log(e);
+            }
+        });
+
         $(document).ajaxError(function(event, rtn) {
             try {
                 if (rtn.responseJSON.message && rtn.responseJSON.message !== '') {

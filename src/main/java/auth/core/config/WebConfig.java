@@ -1,6 +1,7 @@
 package auth.core.config;
 
 import auth.core.interceptor.LoginInterceptor;
+import auth.core.interceptor.SaveInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
@@ -24,6 +25,11 @@ public class WebConfig implements WebMvcConfigurer {
                 .order(1)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/assets/**", "/common/**", "/*.ico", "/error", "/login");
+
+        registry.addInterceptor(new SaveInterceptor())
+                .order(2)
+                .addPathPatterns("/**")
+                .excludePathPatterns("/assets/**", "/common/**", "/*.ico", "/error", "/login", "/authority/get**", "/menu/get**");
     }
 
 }

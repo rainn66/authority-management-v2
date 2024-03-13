@@ -1,9 +1,12 @@
 package auth.controller;
 
+import auth.core.session.SessionConstants;
 import auth.core.util.EncryptUtil;
 import auth.dto.AdminDTO;
 import auth.dto.LoginDTO;
+import auth.dto.MenuDTO;
 import auth.service.LoginService;
+import auth.service.MenuService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -16,6 +19,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 /**
  * 로그인 관련 컨트롤러
  */
@@ -25,6 +30,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class LoginController {
 
     private final LoginService loginService;
+
+    private final MenuService menuService;
 
     /**
      * 로그인페이지
@@ -56,7 +63,14 @@ public class LoginController {
         }
 
         HttpSession session = request.getSession();
-        session.setAttribute("loginAdmin", adminDTO);
+
+        List<MenuDTO> menuList = menuService.getMenuList();
+        for (MenuDTO menuDTO : menuList) {
+            if (menuDTO.getMenuLink() != null) {
+                session.setAttribute(menuDTO.getMenuLink(), menuDTO);
+            }
+        }
+        session.setAttribute(SessionConstants.LOGIN_ADMIN, adminDTO);
 
         return "redirect:" + redirectURL;
     }

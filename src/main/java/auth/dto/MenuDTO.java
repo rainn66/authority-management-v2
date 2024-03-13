@@ -21,7 +21,6 @@ public class MenuDTO {
     @NotEmpty
     private String menuNm;
 
-    @NotEmpty
     private String menuLink;
 
     @NotEmpty
