@@ -45,7 +45,7 @@ public class SaveInterceptor implements HandlerInterceptor {
             }
         } catch (Exception e) {
             log.error("", e);
-            throw new MessageException(e.getMessage());
+            throw new Exception(e.getMessage());
         }
     }
 }
