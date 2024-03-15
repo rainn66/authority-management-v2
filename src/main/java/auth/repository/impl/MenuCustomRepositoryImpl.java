@@ -2,7 +2,6 @@ package auth.repository.impl;
 
 import auth.entity.Menu;
 import auth.entity.QMenu;
-import auth.repository.MenuCustomRepository;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;

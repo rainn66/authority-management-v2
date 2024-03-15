@@ -8,10 +8,9 @@ import auth.repository.AuthorityRepository;
 import auth.repository.MenuRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 
@@ -72,16 +71,10 @@ public class InitAuthority {
                 .build();
         menuRepository.save(authorityMenu);
 
-        //초기관리자 등록(단방향 암호화)
-        MessageDigest md = MessageDigest.getInstance("SHA-512");
-        md.reset();
-        md.update("admin".getBytes());
-        byte[] hashVale  = md.digest();
-        String password = new String(Base64.encodeBase64(hashVale, true));
-
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         Admin admin = Admin.builder().userId("admin")
                 .userNm("최고관리자")
-                .password(password)
+                .password(passwordEncoder.encode("admin"))
                 .lastLoginDt(LocalDateTime.now())
                 .authority(시스템관리자).build();
         adminRepository.save(admin);

@@ -1,7 +1,5 @@
 package auth.controller;
 
-import auth.core.session.SessionConstants;
-import auth.core.util.EncryptUtil;
 import auth.dto.AdminDTO;
 import auth.dto.LoginDTO;
 import auth.dto.MenuDTO;
@@ -12,6 +10,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,12 +54,16 @@ public class LoginController {
             return "login/login";
         }
 
-        AdminDTO adminDTO = loginService.login(form.getUserId(), EncryptUtil.passwordEncode(form.getPassword()));
+        log.info("loginDTO.getUserId {}", form.getUserId());
+        log.info("loginDTO.getPassword {}", form.getPassword());
 
-        if (adminDTO == null) {
-            bindingResult.reject("loginFail", "아이디 또는 비밀번호가 바르지 않습니다.");
-            return "login/login";
-        }
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        AdminDTO adminDTO = loginService.login(form.getUserId(), passwordEncoder.encode(form.getPassword()));
+
+        //if (adminDTO == null) {
+        //    bindingResult.reject("loginFail", "아이디 또는 비밀번호가 바르지 않습니다.");
+        //    return "login/login";
+        //}
 
         HttpSession session = request.getSession();
 
@@ -70,7 +73,7 @@ public class LoginController {
                 session.setAttribute(menuDTO.getMenuLink(), menuDTO);
             }
         }
-        session.setAttribute(SessionConstants.LOGIN_ADMIN, adminDTO);
+        //session.setAttribute(SessionConstants.LOGIN_ADMIN, adminDTO);
 
         return "redirect:" + redirectURL;
     }

@@ -1,9 +1,6 @@
 package auth.core.config;
 
-import auth.core.interceptor.LoginInterceptor;
-import auth.core.interceptor.SaveInterceptor;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.thymeleaf.spring6.view.ThymeleafViewResolver;
@@ -18,18 +15,4 @@ public class WebConfig implements WebMvcConfigurer {
         resolver.setContentType("text/html; charset=UTF-8");
         registry.viewResolver(resolver);
     }
-
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LoginInterceptor())
-                .order(1)
-                .addPathPatterns("/**")
-                .excludePathPatterns("/assets/**", "/common/**", "/*.ico", "/error", "/login");
-
-        registry.addInterceptor(new SaveInterceptor())
-                .order(2)
-                .addPathPatterns("/**")
-                .excludePathPatterns("/assets/**", "/common/**", "/*.ico", "/error", "/login", "/authority/get**", "/menu/get**");
-    }
-
 }

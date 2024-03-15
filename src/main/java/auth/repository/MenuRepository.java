@@ -1,6 +1,7 @@
 package auth.repository;
 
 import auth.entity.Menu;
+import auth.repository.impl.MenuCustomRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 

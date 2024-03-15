@@ -1,18 +1,12 @@
 package auth.controller;
 
-import auth.core.session.SessionConstants;
-import auth.dto.AdminDTO;
-import auth.dto.MenuDTO;
 import auth.service.MenuService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
-import java.util.List;
 
 /**
  * request url 명명규칙
@@ -31,15 +25,15 @@ public class MainController {
      */
     @GetMapping("/")
     public String home(Model model, HttpServletRequest request) throws Exception {
-        try {
-            HttpSession session = request.getSession();
-            AdminDTO loginAdmin = (AdminDTO) session.getAttribute(SessionConstants.LOGIN_ADMIN);
-            List<MenuDTO> parentMenu = menuService.getSideMenuList(loginAdmin.getAuthorityCd());
-            model.addAttribute("sidebar", parentMenu);
-        } catch (Exception e) {
-            log.error("", e);
-            throw new Exception(e);
-        }
+//        try {
+//            HttpSession session = request.getSession();
+//            AdminDTO loginAdmin = (AdminDTO) session.getAttribute(SessionConstants.LOGIN_ADMIN);
+//            List<MenuDTO> parentMenu = menuService.getSideMenuList(loginAdmin.getAuthorityCd());
+//            model.addAttribute("sidebar", parentMenu);
+//        } catch (Exception e) {
+//            log.error("", e);
+//            throw new Exception(e);
+//        }
         return "index";
     }
 }

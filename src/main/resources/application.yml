@@ -21,4 +21,4 @@ logging.level:
         hibernate.SQL: debug
 #        apache.coyote.http11: debug
 
-server.servlet.session.timeout: 1800
+server.servlet.session.timeout: 600

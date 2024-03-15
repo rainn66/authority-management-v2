@@ -1,4 +1,4 @@
-package auth.repository;
+package auth.repository.impl;
 
 import auth.entity.Menu;
 

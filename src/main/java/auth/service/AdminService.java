@@ -1,7 +1,6 @@
 package auth.service;
 
 import auth.core.exception.MessageException;
-import auth.core.util.EncryptUtil;
 import auth.dto.AdminDTO;
 import auth.dto.AdminRegDTO;
 import auth.entity.Admin;
@@ -9,6 +8,7 @@ import auth.entity.Authority;
 import auth.repository.AdminRepository;
 import auth.repository.AuthorityRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,11 +36,11 @@ public class AdminService {
     public void saveAdmin(AdminRegDTO adminDTO) {
         try {
             Authority authority = authorityRepository.findById(adminDTO.getAuthorityCd()).orElseThrow(() -> new MessageException("선택한 권한을 찾을 수 없습니다."));
-
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             Admin newAdmin = Admin.builder()
                     .userId(adminDTO.getUserId())
                     .userNm(adminDTO.getUserNm())
-                    .password(EncryptUtil.passwordEncode(adminDTO.getPassword()))
+                    .password(passwordEncoder.encode(adminDTO.getPassword()))
                     .authority(authority)
                     .build();
             adminRepository.save(newAdmin);
