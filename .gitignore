@@ -36,3 +36,6 @@ out/
 ### VS Code ###
 .vscode/
 /src/main/generated/
+/src/main/resources/static/assets/vendor/apexcharts/
+/src/main/resources/static/assets/vendor/chart.js/
+/src/main/resources/static/assets/vendor/echarts/
