@@ -1,17 +1,16 @@
 package auth.controller;
 
 import auth.core.exception.MessageException;
-import auth.core.session.SessionConstants;
+import auth.core.security.CustomAdminDetails;
 import auth.core.util.CustomMap;
-import auth.dto.AdminDTO;
 import auth.dto.MenuDTO;
 import auth.service.AuthorityService;
 import auth.service.MenuService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -41,9 +40,8 @@ public class MenuController {
     public String getMenuList(Model model, HttpServletRequest request) throws Exception {
         //비동기 호출 아니므로 MessageException 사용불가
         try {
-            HttpSession session = request.getSession();
-            AdminDTO loginAdmin = (AdminDTO) session.getAttribute(SessionConstants.LOGIN_ADMIN);
-            model.addAttribute("menus", menuService.getSideMenuList(loginAdmin.getAuthorityCd()));
+            CustomAdminDetails principal = (CustomAdminDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            model.addAttribute("menus", menuService.getSideMenuList(principal.getAuthoritiesStrArr()));
             model.addAttribute("authorities", authorityService.getAuthorityList());
         } catch (Exception e) {
             log.error("", e);

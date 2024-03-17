@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,11 +26,11 @@ public class MenuService {
     }
 
     //사이드메뉴 가져오기
-    public List<MenuDTO> getSideMenuList(String viewAuthorityCd) {
+    public List<MenuDTO> getSideMenuList(Collection<String> authorityCdList) {
         /* //조회권한 미적용 쿼리
         return menuRepository.findByParentIsNull(Sort.by(Sort.Direction.ASC, "menuOrder")).stream()
                 .map(MenuDTO::new).collect(Collectors.toList());*/
-        return menuRepository.findByViewAuthority(viewAuthorityCd).stream()
+        return menuRepository.findByViewAuthority(authorityCdList).stream()
                 .map(MenuDTO::new).collect(Collectors.toList());
     }
 

@@ -1,5 +1,6 @@
 package auth.core;
 
+import auth.core.constants.AuthorityConstants;
 import auth.entity.Admin;
 import auth.entity.Authority;
 import auth.entity.Menu;
@@ -28,9 +29,9 @@ public class InitAuthority {
     public void initAuthority() throws NoSuchAlgorithmException {
 
         //기본권한등록
-        Authority 시스템관리자 = Authority.builder().authorityCd("AUTH003").authorityNm("시스템관리자").build();
-        Authority 일반관리자 = Authority.builder().authorityCd("AUTH002").authorityNm("일반관리자").build();
-        Authority 일반사용자 = Authority.builder().authorityCd("AUTH001").authorityNm("일반사용자").build();
+        Authority 시스템관리자 = Authority.builder().authorityCd(AuthorityConstants.AUTH_003).authorityNm("시스템관리자").build();
+        Authority 일반관리자 = Authority.builder().authorityCd(AuthorityConstants.AUTH_002).authorityNm("일반관리자").build();
+        Authority 일반사용자 = Authority.builder().authorityCd(AuthorityConstants.AUTH_001).authorityNm("일반사용자").build();
 
         authorityRepository.save(시스템관리자);
         authorityRepository.save(일반관리자);
