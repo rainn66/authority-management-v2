@@ -3,7 +3,10 @@ package auth.core.config;
 import auth.core.filter.LoginFailureHandler;
 import auth.core.filter.LoginSuccessHandler;
 import auth.core.security.CustomAdminDetailsService;
+import auth.core.security.MenuAuthority;
+import auth.dto.MenuDTO;
 import auth.service.MenuService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +19,10 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import java.util.Objects;
 
 @RequiredArgsConstructor
 @EnableWebSecurity
@@ -40,6 +47,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         //http.csrf(c -> c.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()));
 
+        matchUrlAuthority(http);
+
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
@@ -47,8 +56,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/assets/**", "/common/**", "/*.ico", "/error", "/login").permitAll()
-
-                .anyRequest().authenticated())
+                        .anyRequest().authenticated())
 
                 .formLogin(f -> f
                         .usernameParameter("userId")
@@ -67,7 +75,24 @@ public class SecurityConfig {
                         .tokenValiditySeconds(604800)
                         .alwaysRemember(false)
                         .userDetailsService(customAdminDetailsService));
+
         return http.build();
+    }
+
+    private void matchUrlAuthority(HttpSecurity http) throws Exception {
+        if (MenuAuthority.menuAuthorities.size() > 0) {
+            HttpServletRequest req = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
+            if (req.getHeader("nowURL") == null) {
+                String authorityUrl = req.getHeader("nowURL");
+
+                for (MenuDTO menu : MenuAuthority.menuAuthorities) {
+                    if (menu.getMenuLink().equals(authorityUrl)) {
+                        http.authorizeHttpRequests(auth -> auth
+                                .requestMatchers("/**/update**", "/**/save**", "/**/delete**").hasAnyAuthority(menu.getSaveAuthority()));
+                    }
+                }
+            }
+        }
     }
 
 }
