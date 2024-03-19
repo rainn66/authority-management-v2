@@ -1,6 +1,6 @@
 ## Menu and User authority management web application
 ### 메뉴 및 사용자 권한처리 수행 어드민페이지
-authority-management 에서 인터셉터 적용방식을 Spring Security 적용
+authority-management 에서 권한관련 인터셉터 적용방식을 Spring Security 적용
 
 ### 기능
 - 로그인
