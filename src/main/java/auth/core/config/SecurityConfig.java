@@ -53,6 +53,7 @@ public class SecurityConfig {
                 //https://docs.spring.io/spring-security/reference/6.2-SNAPSHOT/servlet/authorization/authorize-http-requests.html
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/assets/**", "/common/**", "/*.ico", "/error", "/login").permitAll()
+                        //동적 url 등록/수정/삭제 권한 체크
                         .anyRequest().access((authentication, context) ->
                                 new AuthorizationDecision(AuthorityCheckFilter.check(authentication.get(), context.getRequest()))))
 
