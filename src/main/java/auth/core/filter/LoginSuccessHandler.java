@@ -33,9 +33,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
         session.setAttribute(SessionConstants.LOGIN_ADMIN, loginAdmin.getUserNm());
 
         //MenuAuthority 객체에 메뉴 url 과 권한 세팅
-        if (MenuAuthority.menuAuthorities == null || MenuAuthority.menuAuthorities.size() == 0) {
-            MenuAuthority.menuAuthorities = service.getMenuList();
-        }
+        MenuAuthority.menuAuthorities = service.getMenuList();
 
         setDefaultTargetUrl("/");
         super.onAuthenticationSuccess(request, response, authentication);
