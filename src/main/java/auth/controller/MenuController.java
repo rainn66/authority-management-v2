@@ -2,7 +2,6 @@ package auth.controller;
 
 import auth.core.exception.MessageException;
 import auth.core.security.CustomAdminDetails;
-import auth.core.util.CustomMap;
 import auth.dto.MenuDTO;
 import auth.service.AuthorityService;
 import auth.service.MenuService;
@@ -36,7 +35,7 @@ public class MenuController {
     /**
      * 메뉴 목록 조회(+권한목록)
      */
-    @GetMapping("/getMenuList")
+    @GetMapping
     public String getMenuList(Model model, HttpServletRequest request) throws Exception {
         //비동기 호출 아니므로 MessageException 사용불가
         try {
@@ -54,11 +53,11 @@ public class MenuController {
      * 메뉴 정보 조회
      */
     @ResponseBody
-    @PostMapping("/getMenuInfo")
-    public Map<String, Object> getMenuInfo(@RequestBody CustomMap param) {
+    @GetMapping("/{menuIdx}")
+    public Map<String, Object> getMenuInfo(@PathVariable Long menuIdx) {
         Map<String, Object> rtnMap = new HashMap<>();
         try {
-            rtnMap.put("menuInfo", menuService.getMenuInfo(param.getLong("menuIdx")));
+            rtnMap.put("menuInfo", menuService.getMenuInfo(menuIdx));
         } catch (Exception e) {
             log.error("", e);
             throw new MessageException(e.getMessage());
@@ -70,7 +69,7 @@ public class MenuController {
      * 메뉴 저장
      */
     @ResponseBody
-    @PostMapping("/saveMenu")
+    @PostMapping
     public Map<String, Object> saveMenu(@RequestBody @Valid MenuDTO menuDTO, BindingResult bindingResult) {
         Map<String, Object> rtnMap = new HashMap<>();
         try {
@@ -93,15 +92,15 @@ public class MenuController {
      * 메뉴 정보 수정
      */
     @ResponseBody
-    @PostMapping("/updateMenu")
-    public Map<String, Object> updateMenu(@RequestBody @Valid MenuDTO menuDTO, BindingResult bindingResult) {
+    @PostMapping("/{menuIdx}")
+    public Map<String, Object> updateMenu(@PathVariable Long menuIdx, @RequestBody @Valid MenuDTO menuDTO, BindingResult bindingResult) {
         Map<String, Object> rtnMap = new HashMap<>();
         try {
             if (bindingResult.hasErrors()) {
                 FieldError error = bindingResult.getFieldErrors().get(0);
                 throw new MessageException(error.getDefaultMessage());
             }
-
+            menuDTO.setMenuIdx(menuIdx);
             menuService.updateMenu(menuDTO);
         } catch (Exception e) {
             log.error("", e);
@@ -115,11 +114,11 @@ public class MenuController {
      * 메뉴 삭제
      */
     @ResponseBody
-    @PostMapping("/deleteMenu")
-    public Map<String, Object> deleteMenu(@RequestBody CustomMap param) {
+    @DeleteMapping("/{menuIdx}")
+    public Map<String, Object> deleteMenu(@PathVariable Long menuIdx) {
         Map<String, Object> rtnMap = new HashMap<>();
         try {
-            menuService.deleteMenu(param.getLong("menuIdx"));
+            menuService.deleteMenu(menuIdx);
             rtnMap.put("message", "삭제되었습니다.");
         } catch (Exception e) {
             log.error("", e);

@@ -7,12 +7,9 @@ import auth.dto.MenuDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.util.PatternMatchUtils;
 
 @Slf4j
 public class AuthorityCheckFilter {
-
-    private static final String[] notFilteringList = {"/**/update**", "/**/save**", "/**/delete**"};
 
     public static boolean check(Authentication authentication, HttpServletRequest request) {
         String requestUri = request.getRequestURI();
@@ -24,8 +21,8 @@ public class AuthorityCheckFilter {
             return false;
         }
 
-        if (PatternMatchUtils.simpleMatch(notFilteringList, requestUri)) {
-            String nowUrl = request.getHeader("nowURL");
+        if (!request.getMethod().equals("GET")) {
+            String nowUrl = request.getHeader("nowURL"); //비동기(ajax) 접근방식만 허용됨
             if (nowUrl == null) {
                 log.info("AuthorityCheckFilter.check nowUrl is null");
                 throw new MessageException("잘못된 접근입니다.");

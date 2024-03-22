@@ -46,6 +46,10 @@ public class MenuDTO {
 
     private String regUserId;
 
+    public void setMenuIdx(Long menuIdx) {
+        this.menuIdx = menuIdx;
+    }
+
     public MenuDTO(Menu menu) {
         this.menuIdx = menu.getMenuIdx();
         this.menuOrder = menu.getMenuOrder();

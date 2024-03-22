@@ -163,12 +163,9 @@
 
     function fnClickMenuDetail(menuIdx) {
         $.ajax({
-            url : '/menu/getMenuInfo',
-            method: 'POST',
+            url : '/menu/' + menuIdx,
+            method: 'GET',
             contentType: 'application/json',
-            data: JSON.stringify({
-                menuIdx: menuIdx
-            }),
             success: function(rtn) {
                 $('#menuIdx').val(rtn.menuInfo.menuIdx);
                 $('#bfParentMenuIdx').val(rtn.menuInfo.parentMenuIdx);
@@ -206,9 +203,9 @@
             const menuIdx = $('#menuIdx').val();
 
             if (menuIdx === null || menuIdx === '') {
-                action = '/menu/saveMenu';
+                action = '/menu';
             } else {
-                action = '/menu/updateMenu';
+                action = '/menu/' + menuIdx;
                 if ($('#bfParentMenuIdx').val() !== $('#parentMenuIdx').val()) {
                     parentMenuChgYn = 'Y';
                 }
@@ -218,7 +215,6 @@
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({
-                    menuIdx: menuIdx,
                     menuNm: $('#menuNm').val(),
                     menuLink: $('#menuLink').val(),
                     parentMenuIdx: $('#parentMenuIdx').val(),
@@ -228,7 +224,7 @@
                 }),
                 success: function(rtn) {
                     alert(rtn.message);
-                    location.href = '/menu/getMenuList'
+                    location.href = '/menu'
                 }
             })
         }
@@ -244,15 +240,15 @@
 
         if (confirm('"' + $('#menuNm').val() + '" 메뉴를 삭제하시겠습니까?')) {
             $.ajax({
-                url: '/menu/deleteMenu',
-                method: 'POST',
+                url: '/menu/' + menuIdx,
+                method: 'DELETE',
                 contentType: 'application/json',
                 data: JSON.stringify({
                     menuIdx: menuIdx
                 }),
                 success: function(rtn) {
                     alert(rtn.message);
-                    location.href = '/menu/getMenuList'
+                    location.href = '/menu'
                 }
             })
         }

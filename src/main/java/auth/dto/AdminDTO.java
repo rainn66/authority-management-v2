@@ -33,6 +33,10 @@ public class AdminDTO {
 
     private String regUserId;
 
+    public void setAdminIdx(Long adminIdx) {
+        this.adminIdx = adminIdx;
+    }
+
     public AdminDTO(Admin admin) {
         this.adminIdx = admin.getAdminIdx();
         this.userId = admin.getUserId();

@@ -174,12 +174,9 @@
 
     function fnClickAdminDetail(adminIdx) {
         $.ajax({
-            url : '/authority/getAdminInfo',
-            method: 'POST',
+            url : '/authority/admin/' + adminIdx,
+            method: 'GET',
             contentType: 'application/json',
-            data: JSON.stringify({
-                adminIdx: adminIdx
-            }),
             success: function(rtn) {
                 $('#adminIdx').val(rtn.adminInfo.adminIdx);
                 $('#userId').val(rtn.adminInfo.userId);
@@ -199,17 +196,16 @@
 
         if (confirm('저장하시겠습니까?')) {
             $.ajax({
-                url : '/authority/updateAdmin',
+                url : '/authority/admin/' + adminIdx,
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({
-                    adminIdx: adminIdx,
                     userNm: $('#userNm').val(),
                     authorityCd: $('#authorityCd').val()
                 }),
                 success: function(rtn) {
                     alert(rtn.message);
-                    location.href = '/authority/getAdminList'
+                    location.href = '/authority/admin'
                 }
             });
         }
@@ -223,15 +219,12 @@
 
         if (confirm('삭제하시겠습니까?')) {
             $.ajax({
-                url : '/authority/deleteAdmin',
-                method: 'POST',
+                url : '/authority/admin/' + adminIdx,
+                method: 'DELETE',
                 contentType: 'application/json',
-                data: JSON.stringify({
-                    adminIdx: adminIdx,
-                }),
                 success: function(rtn) {
                     alert(rtn.message);
-                    location.href = '/authority/getAdminList'
+                    location.href = '/authority/admin'
                 }
             });
         }
@@ -240,7 +233,7 @@
     //ID 중복체크
     function fnCheckId() {
         $.ajax({
-            url : '/authority/checkId',
+            url : '/authority/admin/checkId',
             method: 'POST',
             contentType: 'application/json',
             data: JSON.stringify({
@@ -276,7 +269,7 @@
 
         if (confirm('저장하시겠습니까?')) {
             $.ajax({
-                url : '/authority/saveAdmin',
+                url : '/authority/admin',
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({
@@ -287,7 +280,7 @@
                 }),
                 success: function(rtn) {
                     alert(rtn.message);
-                    location.href = '/authority/getAdminList'
+                    location.href = '/authority/admin'
                 }
             });
         }

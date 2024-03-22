@@ -38,7 +38,7 @@ public class AuthorityController {
     /**
      * 관리자 목록 조회
      */
-    @GetMapping("/getAdminList")
+    @GetMapping("/admin")
     public String getAdminList(Model model) throws Exception {
         try {
             model.addAttribute("adminList", adminService.getAdminList());
@@ -54,11 +54,11 @@ public class AuthorityController {
      * 관리자 정보 조회
      */
     @ResponseBody
-    @PostMapping("/getAdminInfo")
-    public Map<String, Object> getAdminInfo(@RequestBody CustomMap param) {
+    @GetMapping("/admin/{adminIdx}")
+    public Map<String, Object> getAdminInfo(@PathVariable Long adminIdx) {
         Map<String, Object> rtnMap = new HashMap<>();
         try {
-            rtnMap.put("adminInfo", adminService.getAdminInfo(param.getLong("adminIdx")));
+            rtnMap.put("adminInfo", adminService.getAdminInfo(adminIdx));
         } catch (Exception e) {
             log.error("", e);
             throw new MessageException(e.getMessage());
@@ -70,7 +70,7 @@ public class AuthorityController {
      * 관리자 신규등록
      */
     @ResponseBody
-    @PostMapping("/saveAdmin")
+    @PostMapping("/admin")
     public Map<String, Object> saveAdmin(@RequestBody @Valid AdminRegDTO adminDTO) {
         Map<String, Object> rtnMap = new HashMap<>();
         try {
@@ -88,14 +88,15 @@ public class AuthorityController {
      * 관리자 정보 수정(관리자명, 권한)
      */
     @ResponseBody
-    @PostMapping("/updateAdmin")
-    public Map<String, Object> updateAdmin(@RequestBody @Valid AdminDTO adminDTO, BindingResult bindingResult) {
+    @PostMapping("/admin/{adminIdx}")
+    public Map<String, Object> updateAdmin(@PathVariable Long adminIdx, @RequestBody @Valid AdminDTO adminDTO, BindingResult bindingResult) {
         Map<String, Object> rtnMap = new HashMap<>();
         try {
             if (bindingResult.hasErrors()) {
                 FieldError error = bindingResult.getFieldErrors().get(0);
                 throw new MessageException(error.getDefaultMessage());
             }
+            adminDTO.setAdminIdx(adminIdx);
             adminService.updateAdmin(adminDTO);
         } catch (Exception e) {
             log.error("", e);
@@ -109,11 +110,11 @@ public class AuthorityController {
      * 관리자 삭제
      */
     @ResponseBody
-    @PostMapping("/deleteAdmin")
-    public Map<String, Object> deleteAdmin(@RequestBody CustomMap param) {
+    @DeleteMapping("/admin/{adminIdx}")
+    public Map<String, Object> deleteAdmin(@PathVariable Long adminIdx) {
         Map<String, Object> rtnMap = new HashMap<>();
         try {
-            adminService.deleteAdmin(param.getLong("adminIdx"));
+            adminService.deleteAdmin(adminIdx);
         } catch (Exception e) {
             log.error("", e);
             throw new MessageException(e.getMessage());
@@ -126,7 +127,7 @@ public class AuthorityController {
      * 관리자 신규등록 - 아이디 중복체크
      */
     @ResponseBody
-    @PostMapping("/checkId")
+    @PostMapping("/admin/checkId")
     public Map<String, Object> checkId(@RequestBody CustomMap param) {
         Map<String, Object> rtnMap = new HashMap<>();
         try {
@@ -142,7 +143,7 @@ public class AuthorityController {
     /**
      * 메뉴 목록 (메뉴권한 일괄 관리)
      */
-    @GetMapping("/getMenuAll")
+    @GetMapping("/menu")
     public String getMenuAll(Model model) throws Exception {
         try {
             model.addAttribute("menuList", menuService.getMenuList());
@@ -158,7 +159,7 @@ public class AuthorityController {
      * 메뉴 권한 일괄 저장
      */
     @ResponseBody
-    @PostMapping("/updateAllMenuAuth")
+    @PostMapping("/menu/all")
     public Map<String, Object> updateMenuAuth(@RequestBody List<CustomMap> param) {
         Map<String, Object> rtnMap = new HashMap<>();
         try {
