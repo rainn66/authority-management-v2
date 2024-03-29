@@ -42,7 +42,7 @@ public class InitAuthority {
                 .menuOrder(1)
                 .menuLink("/menu")
                 .viewAuthority(일반관리자.getAuthorityCd())
-                .saveAuthority(일반관리자.getAuthorityCd())
+                .saveAuthority(시스템관리자.getAuthorityCd())
                 .build();
         menuRepository.save(menu);
 
@@ -50,14 +50,14 @@ public class InitAuthority {
                 .menuOrder(2)
                 //.menuLink("/authority/admin")
                 .viewAuthority(일반관리자.getAuthorityCd())
-                .saveAuthority(일반관리자.getAuthorityCd())
+                .saveAuthority(시스템관리자.getAuthorityCd())
                 .build();
         menuRepository.save(authority);
 
         Menu authorityAdmin = Menu.builder().menuNm("관리자/관리자권한관리")
                 .menuOrder(1)
                 .menuLink("/authority/admin")
-                .viewAuthority(시스템관리자.getAuthorityCd())
+                .viewAuthority(일반관리자.getAuthorityCd())
                 .saveAuthority(시스템관리자.getAuthorityCd())
                 .parent(authority)
                 .build();
@@ -67,7 +67,7 @@ public class InitAuthority {
                 .menuOrder(2)
                 .menuLink("/authority/menu")
                 .viewAuthority(일반관리자.getAuthorityCd())
-                .saveAuthority(일반관리자.getAuthorityCd())
+                .saveAuthority(시스템관리자.getAuthorityCd())
                 .parent(authority)
                 .build();
         menuRepository.save(authorityMenu);

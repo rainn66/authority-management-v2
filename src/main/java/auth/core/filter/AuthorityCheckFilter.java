@@ -21,6 +21,7 @@ public class AuthorityCheckFilter {
             return false;
         }
 
+        //request method 가 get 이 아닌 요청에 대해 필터 적용
         if (!request.getMethod().equals("GET")) {
             String nowUrl = request.getHeader("nowURL"); //비동기(ajax) 접근방식만 허용됨
             if (nowUrl == null) {
